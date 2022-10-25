@@ -423,6 +423,7 @@ namespace TownOfHost
                 {
                     //バニラ役職
                     { CustomRoles.Crewmate, "#ffffff"},
+                //    { CustomRoles.GM, "#8F8F8F" },
                     { CustomRoles.Engineer, "#b6f0ff"},
                     { CustomRoles.Scientist, "#b6f0ff"},
                     { CustomRoles.GuardianAngel, "#b6f0ff"},
@@ -467,12 +468,12 @@ namespace TownOfHost
                     //第三陣営役職
                     { CustomRoles.Arsonist, "#ff6633"},
                     { CustomRoles.Jester, "#ec62a5"},
-                    { CustomRoles.Terrorist, "#00ff00"},
-                    { CustomRoles.Executioner, "#C96600"},
-                    { CustomRoles.Opportunist, "#00ff00"},
+                    { CustomRoles.Terrorist, "#ED7679"},
+                    { CustomRoles.Executioner, "#b5b5b5"},
+                    { CustomRoles.Opportunist, "#84ABFF"},
                     { CustomRoles.Survivor, "#FFE64D"},
                     { CustomRoles.SchrodingerCat, "#696969"},
-                    { CustomRoles.Egoist, "#5600ff"},
+                    { CustomRoles.Egoist, "#ff1313"},
                     { CustomRoles.EgoSchrodingerCat, "#5600ff"},
                     { CustomRoles.Jackal, "#00b4eb"},
                     { CustomRoles.Sidekick, "#00b4eb"},
@@ -503,7 +504,7 @@ namespace TownOfHost
 
                     { CustomRoles.Coven, "#592e98"},
                     { CustomRoles.Veteran, "#998040"},
-                    { CustomRoles.GuardianAngelTOU, "#B3FFFF"},
+                    { CustomRoles.GuardianAngelTOU, "#67f0e0"},
                     { CustomRoles.TheGlitch, "#00FF00"},
                     { CustomRoles.Werewolf, "#A86629"},
                     { CustomRoles.Amnesiac, "#81DDFC"},
@@ -616,6 +617,7 @@ namespace TownOfHost
     {
         //Default
         Crewmate = 0,
+    //    GM,
         //Impostor(Vanilla)
         Impostor,
         Shapeshifter,

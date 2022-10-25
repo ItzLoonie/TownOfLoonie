@@ -20,7 +20,6 @@ Old Versions: [Here](https://github.com/SkullCreeper/TownOfLoonie/releases)
 
 KNOWN BUGS:
 
-- Lovers causes Severe Issues with the Game (fixed in update 0.8.4)
 - Cat does just not work at all.
 - Poisoner doesn't replace a Coven
 - Some Roles have double their Cooldown or half their cooldown sometimes.
@@ -94,6 +93,9 @@ You can execute chat commands by typing in chat.
 | /help now<br>/help n                                  | Show active setting descriptions                  |
 | /changerole <crewmate, impostor, engineer...>         | Change your In-Game Role                          |
 | /level <0-2147483647>                                 | Change your Among Us level                        |
+| /mimic <name>                                         | Copy the outfit of a user                         |
+| /kick <playerID>                                      | Kick player                                       |
+| /ban <playerID>                                       | Ban player                                        |
 
 #### MOD Client Only
 | Command        | Function                    |
@@ -108,9 +110,15 @@ You can execute chat commands by typing in chat.
 | /now<br>/n                  | Show active settings                    |
 | /now roles<br>/n r          | Show active roles settings              |
 | /template <tag><br>/t <tag> | Show template text corresponding to tag |
-| /color<br>/colour           | Change your current color (0-20)        |
+| /color<br>/colour           | Change your current color               |
 | /name                       | Change your current name                |
 | /myrole                     | Display your current role's description |
+
+### Exclusive Commands
+| Command                     | Function                                | User(s)                     |
+| --------------------------- | --------------------------------------- | --------------------------- |
+| /changecolor                | Change your current color               | TOH TOR Devs + select users |
+| /shifty                     | Set shiftyrose tag and rose color       | shiftyrose                  |
 
 ### Template
 This function allows you to send prepared messages.<br>
@@ -126,31 +134,29 @@ For example: `welcome:This room is using the mod Town Of Host: The Other Roles.`
 ### Impostor Disconnect Detection
 If all Impostors leave the game, the game will automatically end with the unused Impostor Disconnected screen. This was done as all impostors leaving the game would black screen all players who do not use desynced Impostor roles after the next meeting.
 
-### Developer Tag
-Developers get a tag while in the lobby to indicate that they're a mod dev.
-Below is an example:
-![Dev tag in use](https://cdn.discordapp.com/attachments/771109338521141298/1021443349821001818/unknown.png)
+### Custom Tags
+Developers and other users get a tag while in the lobby.
 
 ## Roles
 
 | Impostors                           | Crewmates                         | Neutrals                          | Neutral Killings                | Coven                          | Modifiers                 |
 | ----------------------------------- | --------------------------------- | --------------------------------- | ------------------------------- | -------------------------------| --------------------------|
-| [BountyHunter](#bountyhunter)       | [Investigator](#investigator)     | [Vulture](#vulture)               | [Arsonist](#arsonist)           | [Coven Leader](#coven-leader)  | [Bait](#bait)             |
+| [Bounty Hunter](#bountyhunter)      | [Seer](#seer)                     | [Vulture](#vulture)               | [Arsonist](#arsonist)           | [Coven Leader](#coven-leader)  | [Bait](#bait)             |
 | [Camouflager](#camouflager)         | [Dictator](#dictator)             | [Hacker](#hacker)                 | [Egoist](#egoist)               | [Medusa](#medusa)              | [Bewilder](#bewilder)     |
-| [FireWorks](#fireworks)             | [Doctor](#doctor)                 | [Executioner](#executioner)       | [Juggernaut](#juggernaut)       | [Hex Master](#hex-master)      | [Sleuth](#sleuth)         |
-| [Mare](#mare)                       | [Lighter](#lighter)               | [Jester](#jester)                 | [PlagueBearer](#plaguebearer)   | Potion Master                  | [Oblivious](#oblivious)   |
-| [Puppeteer](#puppeteer)             | [Mayor](#mayor)                   | [SchrodingerCat](#schrodingercat) | [The-Glitch](#the-glitch)       | Necromancer                    | [Torch](#torch)           |
+| [Fire Works](#fireworks)            | [Doctor](#doctor)                 | [Executioner](#executioner)       | [Juggernaut](#juggernaut)       | [Hex Master](#hex-master)      | [Sleuth](#sleuth)         |
+| [Mare](#mare)                       | [Lighter](#lighter)               | [Jester](#jester)                 | [Plaguebearer](#plaguebearer)   | Potion Master                  | [Oblivious](#oblivious)   |
+| [Puppeteer](#puppeteer)             | [Mayor](#mayor)                   | [Hitman](#hitman)                 | [The-Glitch](#the-glitch)       | Necromancer                    | [Torch](#torch)           |
 | [Mercenary](#mercenary)             | [Mystic](#mystic)                 | [Opportunist](#opportunist)       | [Werewolf](#werewolf)           | Mimic                          | [Flash](#flash)           |
 | [Sniper](#sniper)                   | [Mechanic](#mechanic)             | [Terrorist](#terrorist)           | [Pestilence](#pestilence)       | Conjuror                       | [Lovers](#lovers)         |
-| [TimeThief](#timethief)             | [Sheriff](#sheriff)               | [Pirate](#guesser)                | [Serial Killer](#serial-killer) |                                | [Watcher](#watcher)       |
+| [Time Thief](#timethief)            | [Sheriff](#sheriff)               | [Pirate](#guesser)                | [Serial Killer](#serial-killer) |                                | [Watcher](#watcher)       |
 | [Vampire](#vampire)                 | [Snitch](#snitch)                 | [Guardian-Angel](#guardian-angel) | [Marksman](#marksman)           |                                | [Diseased](#diseased)     |
-| [Warlock](#warlock)                 | [SpeedBooster](#speedbooster)     | [Amnesiac](#amnesiac)             | [Crewpostor](#crewpostor)       |                                |                           |
-| [Witch](#witch)                     | [Trapper](#trapper)               | [Phantom](#phantom)               |                                 |                                |                           |
+| [Warlock](#warlock)                 | [Speed Booster](#speedbooster)    | [Amnesiac](#amnesiac)             | [Crewpostor](#crewpostor)       |                                |                           |
+| [Witch](#witch)                     | [Trapster](#trapster)             | [Phantom](#phantom)               |                                 |                                |                           |
 | [Mafia](#mafia)                     | [Demolitionist](#demolitionist)   | [Swapper](#swapper)               |                                 |                                |                           |
-| [Madmate](#madmate)                 | [Bastion](#bastion)               | [Hitman](#hitman)                 |                                 |                                |                           |
-| [MadGuardian](#madguardian)         | [Vigilante](#guesser)             |                                   |                                 |                                |                           |
-| [MadSnitch](#madsnitch)             | [Veteran](#veteran)               |                                   |                                 |                                |                           |
-| [SidekickMadmate](#sidekickmadmate) | [Child](#child)                   |                                   |                                 |                                |                           |
+| [Madmate](#madmate)                 | [Bastion](#bastion)               |                                   |                                 |                                |                           |
+| [Mad Guardian](#madguardian)        | [Vigilante](#guesser)             |                                   |                                 |                                |                           |
+| [Mad Snitch](#madsnitch)            | [Veteran](#veteran)               |                                   |                                 |                                |                           |
+| [Sidekick](#sidekick)               | [Child](#child)                   |                                   |                                 |                                |                           |
 | [Silencer](#silencer)               | [Psychic](#psychic)               |                                   |                                 |                                |                           |
 | [Traitor](#traitor)                 |                                   |                                   |                                 |                                |                           |
 | [Assassin](#guesser)                |                                   |                                   |                                 |                                |                           |
@@ -159,16 +165,16 @@ Below is an example:
 | [Grenadier](#grenadier)             |                                   |                                   |                                 |                                |
 | [Ying Yanger](#ying-yanger)         |                                   |                                   |                                 |                                |
 | [Pickpocket](#pickpocket)           |                                   |                                   |                                 |                                |
-| [Cleaner](#cleaner)                 |                                   |                                   |                                 |                                |
+| [Janitor](#janitor)                 |                                   |                                   |                                 |                                |
 | [Freezer](#freezer)                 |                                   |                                   |                                 |                                |
 #### Notes
 
 Roles without a redirect mean they are not implemented yet but are planned.
 
-### GM
+### Spectator
 
-The GM (Game Master) is an observer role.<br>
-Their presence has no effect on the game itself, and all players know who the GM is at all times.<br>
+The Spectator is an observer role.<br>
+Their presence has no effect on the game itself, and all players know who the Spectator is at all times.<br>
 Always assigned to a host and is ghosted from the start.<br>
 
 ## Impostor
@@ -178,7 +184,7 @@ Always assigned to a host and is ghosted from the start.<br>
 Team : Impostors<br>
 Basis : Impostor<br>
 
-If the BountyHunters kill their designated target, their next kill cooldown will be much less than usual.<br>
+If the Bounty Hunter kill their designated target, their next kill cooldown will be much less than usual.<br>
 Killing a player except their current target results in an increased kill cooldown.<br>
 The target swaps after a configurable amount of time.<br>
 
@@ -204,7 +210,7 @@ Create and idea by こう。<br>
 Team : Impostors<br>
 Basis : Shapeshifter<br>
 
-The FireWorks can set off fireworks and kill all at once. <br>
+The Fire Works can set off fireworks and kill all at once. <br>
 They can put a few fireworks by Shapeshift. <br>
 After they put all the fireworks and after the other impostors are all gone, they can ignite all fireworks at once by Shapeshift. <br>
 They can perform kills after setting off fireworks. <br>
@@ -326,7 +332,7 @@ Team : Impostors<br>
 Basis : Impostor<br>
 
 When the vampire kills, the kill is delayed (the bitten player will die in a set time based on settings or when the next meeting is called).<br>
-If the vampire butes [Bait](#Bait), the player will die immediately and a self-report will be forced.<br>
+If the vampire bites [Bait](#Bait), the player will die immediately and a self-report will be forced.<br>
 
 #### Game Options
 
@@ -374,7 +380,7 @@ Team : Impostors<br>
 Basis : Impostor<br>
 
 Traitor spawns when all Impostors die by kill or vote.<br>
-As soon as all Impostors die, the [Sheriff](#sheriff) or [Investigator](#investigator) turns into the Traitor.<br>
+As soon as all Impostors die, the [Sheriff](#sheriff) or [Seer](#seer) turns into the Traitor.<br>
 Traitor is a regular impostor with nothing new.<br>
 
 ### Miner
@@ -406,12 +412,12 @@ Basis : Impostor<br>
 The Pickpocket is an Impostor who steals the votes of players they kill.<br>
 These votes stack up, which can make the Pickpocket very powerful.<br>
 
-### Cleaner
+### Janitor
 
 Team : Impostors<br>
 Basis : Impostor<br>
 
-The Cleaner is an Impostor who can use their report button to clean bodies, making them unreportable.<br>
+The Janitor is an Impostor who can use their report button to clean bodies, making them unreportable.<br>
 Players with the mod will not see the cleaned body.<br>
 
 ### Freezer
@@ -450,7 +456,7 @@ Create and idea by 空き瓶/EmptyBottle<br>
 Team : Impostors<br>
 Basis : Crewmate<br>
 
-The MadGuardians belong to team Impostors, one type of Madmates.<br>
+The Mad Guardian belong to team Impostors, one type of Madmates.<br>
 Compared with Madmates, MadGuardian cannot use vents, while they can guard kills by Impostors after finishing all tasks.<br>
 
 #### Game Options
@@ -466,7 +472,7 @@ Create and idea by そうくん<br>
 Team : Impostors<br>
 Basis : Crewmate or Engineer<br>
 
-The MadSnitches belong to team Impostors, one type of Madmates.<br>
+The Mad Snitch belong to team Impostors, one type of Madmates.<br>
 They can see who is the Impostor after finishing all their tasks.<br>
 Depending on option, they can use vents.<br>
 
@@ -488,18 +494,18 @@ Parasites can shapeshift, kill, and vent.<br>
 Due to limitations, whether Parasite knows the Impostors varies.<br>
 The intended design was that they didn't know.<br>
 
-### SidekickMadmate
+### Sidekick
 
 Create and idea by たんぽぽ<br>
 
 Team : Impostors<br>
 Basis : Undecided<br>
 
-The SidekickMadmate is an acquired Madmate Role assigned by Impostors in task phases.<br>
-Some kind of Shapeshifter-based Impostors can give SidekickMadmate by Shapeshifting next to a target.<br>
+The Sidekick  is an acquired Madmate Role assigned by Impostors in task phases.<br>
+Some kind of Shapeshifter-based Impostors can give Sidekick by Shapeshifting next to a target.<br>
 
 **NOTE:**
-- The **"nearest"** Crewmate becomes SidekickMadmate no matter to whom the Impostors Shapeshift.
+- The **"nearest"** Crewmate becomes Sidekick no matter to whom the Impostors Shapeshift.
 
 
 ## Impostor/Crewmate
@@ -617,7 +623,7 @@ They can also vent like an Engineer.<br>
 Team : Crewmates<br>
 Basis : Impostor(Only host is the Crewmate)<br>
 
-Sheriff can kill imposters always.<br>
+Sheriff can kill impostors always.<br>
 Depending on settings, Sheriff may also kill neutrals.<br>
 The sheriff has no tasks.<br>
 Killing Crewmates will result in suicide. <br>
@@ -672,7 +678,7 @@ Finishing all the tasks boosts the player speed of someone alive.<br>
 | -------------------- |
 | Boosted Player Speed |
 
-### Trapper
+### Trapster
 
 Created by そうくん<br>
 Original idea by 宿主ランニング<br>
@@ -680,7 +686,7 @@ Original idea by 宿主ランニング<br>
 Team : Crewmates<br>
 Basis : Crewmate<br>
 
-When killed, the trapper will hold the killer in place.<br>
+When killed, the trapster will hold the killer in place.<br>
 The time held in place on the body is decided by host in settings.<br>
 
 #### Game Options
@@ -734,17 +740,17 @@ The time is configurable. You will know when you are bombed when you see an arso
 | --------------- |
 | Suicide Time    |
   
-### Investigator
+### Seer
 
 Team : Crewmates<br>
 Basis : Impostor(Only host is the Crewmate)<br>
 
-Sheriff can investigate roles to find out what they are.<br>
+Seer can use their seer ability on other players to see if theyy are good or bad.<br>
 Impostors and coven will always be red, or purple if settings say so.<br>
-The Investigator has no tasks.<br>
+The Seer has no tasks.<br>
 The Host can choose if neutrals appear red.<br>
 
-* As a measure against blackout, after death, the Investigator can only see the motion of committing suicide at each meeting. There is no corpse. <br>
+* As a measure against blackout, after death, the Seer can only see the motion of committing suicide at each meeting. There is no corpse. <br>
 
 #### Game Options
 
@@ -754,7 +760,7 @@ The Host can choose if neutrals appear red.<br>
 | Neutral Evils Appear Red                                          |
 | Neutral Killings Appear Red                                       |
 | Crewmate Killings appear Red                                      |
-| Investigate Cooldown                                              |
+| Seer Cooldown                                                     |
 | Madmates Appear Red                                               |
 | Coven Is Purple                                                   |
 | Child appears Red                                                 |
@@ -835,14 +841,14 @@ To douse, you must stand next to a player after pressing kill until the orange t
 | Arsonist Douse Duration |
 | Arsonist Douse Cooldown |
 
-### PlagueBearer
+### Plaguebearer
 
 Team : Neutral<br>
 Basis : Impostor<br>
 Victory Condition : Be the last one standing with a crewmate<br>
 
-When an PlagueBearer tries to use the kill button, they infect the crewmate.<br>
-To win as PlagueBearer, you must be the last one alive with a crewmember.<br>
+When an Plaguebearer tries to use the kill button, they infect the crewmate.<br>
+To win as Plaguebearer, you must be the last one alive with a crewmember.<br>
 To infect, you just have to press the kill button. No infecting timer. <br>
 After infecting everyone, you turn into Pestilence.
 
@@ -852,7 +858,7 @@ After infecting everyone, you turn into Pestilence.
 
 | Name                    |
 | ----------------------- |
-| PlagueeBearer Infect CD |
+| Plaguebearer Infect CD  |
 
 ### Serial Killer
 
@@ -878,7 +884,7 @@ Team : Neutral<br>
 Basis : Impostor<br>
 Victory Condition : Kill all Living Player<br>
 
-PlagueBearer becomes Pestilence when they finish infecting.<br>
+Plaguebearer becomes Pestilence when they finish infecting.<br>
 Pestilence is an unkillable force. When someone tries to kill Pestilence, the pestilence will kill with a lunge. Pestilence can only be voted.<br>
 However, if Pestilence is killed by an un-direct source, such as Warlock and Puppeteer, the Pestilence WILL die.<br>
 
@@ -981,7 +987,7 @@ Original idea by しゅー<br>
 
 Team : Neutral<br>
 Basis : Shapeshifter<br>
-Victory Condition : Satisfy the Impostor victory condition after all the Impostors die.<br>
+Victory Condition : Betray the Impostors and win alone.<br>
 
 The Egoists are counted among the Impostors.<br>
 They have the same ability as Shapeshifters.<br>
@@ -990,7 +996,7 @@ The Egoists have to exile all Impostors before leading to Impostor win.<br>
 Egoist win means Impostor lose and vice versa.<br>
 
 **NOTE:**
-- The Egoists lose in the following condition:<br>
+- The Egoist loses in the following condition:<br>
 1. Egoist dies.<br>
 2. Impostor win with some Impostors remained.<br>
 3. Crewmate or other Neutral win.<br>
