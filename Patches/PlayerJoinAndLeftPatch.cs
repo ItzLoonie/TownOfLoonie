@@ -274,7 +274,7 @@ namespace TownOfHost
                             Main.devNames.Add(client.Character.PlayerId, rname);
                         }
 
-                        if (client.FriendCode is "stonechill#0791")
+                        if (client.FriendCode is "mossmodel#2348")
                         {
                             string fontSize = "1.5"; //name
                             string fontSize1 = "0.8"; //title
