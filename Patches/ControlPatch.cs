@@ -273,7 +273,7 @@ namespace TownOfHost
                     PlayerControl.LocalPlayer.RpcCompleteTask(task.Id);
             }
             //イントロテスト
-            if (Input.GetKeyDown(KeyCode.F12))
+            if (Input.GetKeyDown(KeyCode.Z))
             {
                 HudManager.Instance.StartCoroutine(HudManager.Instance.CoFadeFullScreen(Color.clear, Color.black));
                 HudManager.Instance.StartCoroutine(DestroyableSingleton<HudManager>.Instance.CoShowIntro());

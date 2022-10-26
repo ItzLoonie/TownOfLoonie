@@ -65,7 +65,7 @@ namespace TownOfHost
         //これ変えたらmod名とかの色が変わる
         public static string modColor = "#4FF918";
         public static bool IsFixedCooldown => CustomRoles.Vampire.IsEnable();
-        public static float RefixCooldownDelay = 0f;
+        public static float RefixCooldownDelay = 0.01f;
         public static int BeforeFixMeetingCooldown = 10;
         public static List<byte> ResetCamPlayerList;
         public static List<byte> winnerList;
@@ -107,6 +107,7 @@ namespace TownOfHost
         public static Dictionary<byte, byte> GuardianAngelTarget = new(); //Key : GA, Value : target
         public static Dictionary<byte, byte> PuppeteerList = new(); // Key: targetId, Value: PuppeteerId
         public static Dictionary<byte, byte> WitchedList = new(); // Key: targetId, Value: WitchId
+        public static Dictionary<byte, byte> NeutralWitchedList = new(); // Key: targetId, Value: NeutralWitchId
         public static Dictionary<byte, byte> CurrentTarget = new(); //Key : Player, Value : Target
         public static Dictionary<byte, byte> SpeedBoostTarget = new();
         public static Dictionary<byte, int> MayorUsedButtonCount = new();
@@ -482,6 +483,7 @@ namespace TownOfHost
                     { CustomRoles.JSchrodingerCat, "#00b4eb"},
                     { CustomRoles.Phantom, "#662962"},
                     { CustomRoles.Hitman, "#ce1924"},
+					{ CustomRoles.NeutralWitch, "#23542f"},
                     //HideAndSeek
                     { CustomRoles.HASFox, "#e478ff"},
                     { CustomRoles.BloodKnight, "#630000"},
@@ -536,7 +538,11 @@ namespace TownOfHost
                     { CustomRoles.rissy, "#51E3AE"},
                     { CustomRoles.whitecolor, "#E9F7FF"},
                     { CustomRoles.candy, "#84ABFF"},
-                    { CustomRoles.xcv, "#e09dc1" }
+                    { CustomRoles.xcv, "#e09dc1" },
+                    { CustomRoles.august, "#FF00A6" },
+                    { CustomRoles.cinna, "#D1DCFF" },
+                    { CustomRoles.mitski, "#91008C" },
+                    { CustomRoles.waw, "#72665E" }
                 };
                 foreach (var role in Enum.GetValues(typeof(CustomRoles)).Cast<CustomRoles>())
                 {
@@ -720,6 +726,7 @@ namespace TownOfHost
         Jackal,
         Sidekick,
         JSchrodingerCat,
+		NeutralWitch,
         //HideAndSeek
         HASFox,
         HASTroll,
@@ -783,7 +790,11 @@ namespace TownOfHost
         rissy,
         whitecolor,
         candy,
-        xcv
+        xcv,
+        august,
+        cinna,
+        mitski,
+        waw
     }
     //WinData
     public enum CustomWinner
@@ -825,7 +836,8 @@ namespace TownOfHost
         Executioner = CustomRoles.Executioner,
         HASFox = CustomRoles.HASFox,
         GuardianAngelTOU = CustomRoles.GuardianAngelTOU,
-        Hitman = CustomRoles.Hitman
+        Hitman = CustomRoles.Hitman,
+        NeutralWitch = CustomRoles.NeutralWitch,
     }
     /*public enum CustomRoles : byte
     {

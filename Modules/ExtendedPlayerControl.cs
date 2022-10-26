@@ -572,6 +572,9 @@ namespace TownOfHost
                     opt.RoleOptions.ShapeshifterCooldown = Options.ShapeshifterCooldown.GetFloat();
                     opt.RoleOptions.ShapeshifterDuration = Options.ShapeshifterDuration.GetFloat();
                     opt.RoleOptions.ShapeshifterLeaveSkin = Options.ShapeshifterSkin.GetBool();
+                    break;
+                case CustomRoles.NeutralWitch:
+               
 
 
                 InfinityVent:
@@ -856,6 +859,7 @@ namespace TownOfHost
                 CustomRoles.Werewolf => true,
                 CustomRoles.TheGlitch => true,
                 CustomRoles.Medusa => true,
+                CustomRoles.NeutralWitch => true,
                 CustomRoles.Coven => true,
                 CustomRoles.Painter => true,
                 CustomRoles.Janitor => true,
@@ -1055,6 +1059,9 @@ namespace TownOfHost
                 case CustomRoles.Janitor:
                 case CustomRoles.Painter:
                     Main.AllPlayerKillCooldown[player.PlayerId] = Options.STCD.GetFloat() * 2;
+                    break;
+                case CustomRoles.NeutralWitch:
+                    Main.AllPlayerKillCooldown[player.PlayerId] = Options.ControlCooldown.GetFloat();
                     break;
             }
             if (player.IsLastImpostor())

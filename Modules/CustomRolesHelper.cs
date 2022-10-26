@@ -79,7 +79,8 @@ namespace TownOfHost
                 CustomRoles.BloodKnight or
                 CustomRoles.HASTroll or
                 CustomRoles.Painter or
-                CustomRoles.HASFox;
+                CustomRoles.HASFox or
+				CustomRoles.NeutralWitch;
         }
         public static bool IsNeutralBad(this CustomRoles role)
         {
@@ -106,7 +107,8 @@ namespace TownOfHost
                 CustomRoles.Hacker or
                 CustomRoles.BloodKnight or
                 CustomRoles.HASTroll or
-                CustomRoles.Painter;
+                CustomRoles.Painter or
+				CustomRoles.NeutralWitch;
         }
         public static bool IsNonNK(this CustomRoles role)
         {
@@ -122,7 +124,8 @@ namespace TownOfHost
                 CustomRoles.GuardianAngelTOU or
                 CustomRoles.Amnesiac or
                 CustomRoles.JSchrodingerCat or
-                CustomRoles.Hacker;
+                CustomRoles.Hacker or
+				CustomRoles.NeutralWitch;
         }
         public static bool UsesVents(this CustomRoles role)
         {
@@ -281,7 +284,8 @@ namespace TownOfHost
                 CustomRoles.Hitman or
                 CustomRoles.Jackal or
                 CustomRoles.Crusader or
-                CustomRoles.Sidekick;
+                CustomRoles.Sidekick or
+				CustomRoles.NeutralWitch;
         }
         public static bool CanRoleBlock(this CustomRoles role)
         {

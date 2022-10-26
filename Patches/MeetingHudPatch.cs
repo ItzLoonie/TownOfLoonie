@@ -558,7 +558,7 @@ namespace TownOfHost
                             case RoleType.Neutral:
                                 if (role.IsNeutralKilling()) badPlayers.Add(pc);
                                 if (Options.NBshowEvil.GetBool())
-                                    if (role is CustomRoles.Opportunist or CustomRoles.Survivor or CustomRoles.GuardianAngelTOU or CustomRoles.Amnesiac or CustomRoles.SchrodingerCat) badPlayers.Add(pc);
+                                    if (role is CustomRoles.Opportunist or CustomRoles.Survivor or CustomRoles.GuardianAngelTOU or CustomRoles.Amnesiac or CustomRoles.NeutralWitch or CustomRoles.SchrodingerCat) badPlayers.Add(pc);
                                 if (Options.NEshowEvil.GetBool())
                                     if (role is CustomRoles.Jester or CustomRoles.Terrorist or CustomRoles.Executioner or CustomRoles.Swapper or CustomRoles.Hacker or CustomRoles.Vulture) badPlayers.Add(pc);
                                 break;

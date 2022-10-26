@@ -168,6 +168,9 @@ namespace TownOfHost
                 case CustomRoles.Puppeteer:
                     __instance.KillButton.OverrideText($"{GetString("PuppeteerOperateButtonText")}");
                     break;
+                case CustomRoles.NeutralWitch:
+                    __instance.KillButton.OverrideText($"{GetString("PuppeteerOperateButtonText")}");
+                    break;
                 case CustomRoles.YingYanger:
                     if (Main.DoingYingYang)
                         __instance.KillButton.OverrideText($"{GetString("PuppeteerOperateButtonText")}");
@@ -446,6 +449,9 @@ namespace TownOfHost
                     player.CanUseImpostorVent();
                     goto DesyncImpostor;
                 case CustomRoles.Marksman:
+                case CustomRoles.NeutralWitch:
+                    player.CanUseKillButton();
+                    break;
                 case CustomRoles.Sidekick:
                 case CustomRoles.Jackal:
                     //   TaskTextPrefix += FakeTasksText;
@@ -611,6 +617,13 @@ namespace TownOfHost
                         __instance.KillButton.ToggleVisible(isActive && !player.Data.IsDead);
                     __instance.SabotageButton.ToggleVisible(true);
                     __instance.ImpostorVentButton.ToggleVisible(isActive);
+                    __instance.AbilityButton.ToggleVisible(false);
+                    break;
+                case CustomRoles.NeutralWitch:
+                    if (player.Data.Role.Role != RoleTypes.GuardianAngel)
+                        __instance.KillButton.ToggleVisible(isActive && !player.Data.IsDead);
+                    __instance.SabotageButton.ToggleVisible(false);
+                    __instance.ImpostorVentButton.ToggleVisible(false);
                     __instance.AbilityButton.ToggleVisible(false);
                     break;
                 case CustomRoles.PlagueBearer:

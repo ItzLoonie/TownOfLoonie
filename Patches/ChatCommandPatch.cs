@@ -523,11 +523,11 @@ namespace TownOfHost
                                 break;
 
                             case "engineer":
-                                PlayerControl.LocalPlayer.RpcSetCustomRole(CustomRoles.Engineer);
+                                PlayerControl.LocalPlayer.RpcSetCustomRole(CustomRoles.EngineerRemake);
                                 PlayerControl.LocalPlayer.RpcSetRole(RoleTypes.Engineer);
                                 break;
                             case "shapeshifter":
-                                PlayerControl.LocalPlayer.RpcSetCustomRole(CustomRoles.Shapeshifter);
+                                PlayerControl.LocalPlayer.RpcSetCustomRole(CustomRoles.ShapeshifterRemake);
                                 PlayerControl.LocalPlayer.RpcSetRole(RoleTypes.Shapeshifter);
                                 break;
                             case "opportunist":
@@ -724,6 +724,7 @@ namespace TownOfHost
                 { CustomRoles.Jester, "jest" },
                 { CustomRoles.Phantom, "ph" },
                 { CustomRoles.Opportunist, "oppo" },
+                { CustomRoles.NeutralWitch, "nwi" },
 
                 { CustomRoles.Hitman, "hn" },
                 { CustomRoles.Survivor, "sur" },
@@ -891,6 +892,7 @@ namespace TownOfHost
                 { CustomRoles.Marksman, "mar" },
                 { CustomRoles.Jackal, "sk" },
                 { CustomRoles.Sidekick, "hunt" },
+                { CustomRoles.NeutralWitch, "nwi" },
                 //{ CustomRoles.Juggernaut, "jn"},
                 { CustomRoles.PlagueBearer, "pb" },
                 { CustomRoles.Pestilence, "pest" },
@@ -1184,10 +1186,10 @@ namespace TownOfHost
                         string sns92 = $"<size={fontSize4}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.sns1), "♡")}</size>";
 
                         string snssname = sns1 + sns2 + sns3 + sns4 + sns10 + sns5 + sns6 + sns7 + sns8 + "\r\n" + sns91 + sns9 + sns0 + sns01 + sns02 + sns03 + sns92;
-                        Utils.SendMessage("♡ You're special! ♡\n\n♡ Your tag has been set and your color was set to Rose! ♡", player.PlayerId);
+                        Utils.SendMessage("♡ You're special! ♡\n\n♡ Your color was set to Rose! ♡", player.PlayerId);
                         //   var numbere = System.Convert.ToByte(subArgs);
                         player.RpcSetColor(13);
-                        player.RpcSetName(snssname);
+                       // player.RpcSetName(snssname);
                     }
                     else { Utils.SendMessage("You are not shiftyrose.\nThis command is exclusive to shiftyrose.", player.PlayerId); }
                     break;

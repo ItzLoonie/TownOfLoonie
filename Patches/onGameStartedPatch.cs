@@ -42,6 +42,7 @@ namespace TownOfHost
             Main.isCursed = false;
             Main.PuppeteerList = new Dictionary<byte, byte>();
             Main.WitchedList = new Dictionary<byte, byte>();
+            Main.NeutralWitchedList = new Dictionary<byte, byte>();
 
             Main.AfterMeetingDeathPlayers = new();
             Main.ResetCamPlayerList = new();
@@ -401,8 +402,14 @@ namespace TownOfHost
                                 if (RoleGoingInList(CustomRoles.Amnesiac))
                                     rolesChosenNon.Add(CustomRoles.Amnesiac);
 
+                        //        if (RoleGoingInList(CustomRoles.NeutralWitch))
+                       //             rolesChosenNon.Add(CustomRoles.NeutralWitch);
+
                                 if (RoleGoingInList(CustomRoles.Phantom))
                                     rolesChosenNon.Add(CustomRoles.Phantom);
+
+                                if (RoleGoingInList(CustomRoles.Opportunist))
+                                    rolesChosenNon.Add(CustomRoles.Opportunist);
 
                                 if (RoleGoingInList(CustomRoles.Hitman))
                                     rolesChosenNon.Add(CustomRoles.Hitman);

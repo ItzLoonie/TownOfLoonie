@@ -271,6 +271,12 @@ namespace TownOfHost
                     winner.Add(pc);
                     Main.additionalwinners.Add(AdditionalWinners.Opportunist);
                 }
+                // Neutral Witch
+                if (pc.Is(CustomRoles.NeutralWitch) && !pc.Data.IsDead && Main.currentWinner != CustomWinner.Draw && Main.currentWinner != CustomWinner.Terrorist && Main.currentWinner != CustomWinner.Child && Main.currentWinner != CustomWinner.Jester && Main.currentWinner != CustomWinner.Executioner && Main.currentWinner != CustomWinner.Swapper)
+                {
+                    winner.Add(pc);
+                    Main.additionalwinners.Add(AdditionalWinners.NeutralWitch);
+                }
                 //SchrodingerCat
                 if (Options.CanBeforeSchrodingerCatWinTheCrewmate.GetBool())
                     if (pc.Is(CustomRoles.SchrodingerCat) && Main.currentWinner == CustomWinner.Crewmate)
