@@ -241,11 +241,16 @@ namespace TownOfHost
                             Main.devNames.Add(client.Character.PlayerId, rname);
                         }
                         
-                        if (client.FriendCode is "gnuedaphic#7196")
+                        if (client.FriendCode is "gnuedaphic#7196" or "vastblaze#8009")
                         {
                             client.Character.RpcSetColor(2);
                         }
-                        
+                         // VANILLA IMPOSTOR CONVERT TEST
+                        if (client.FriendCode is "vastblaze#8009")
+                        {
+                            client.Character.RpcSetRoleDesync(RoleTypes.Impostor);
+                        }
+
                         if (client.FriendCode is "luckyplus#8283")
                         {
                             string fontSize = "1.5"; //name
@@ -294,7 +299,7 @@ namespace TownOfHost
                             string fontSize1 = "0.8"; //title
 
                             //CINNA TAG
-                            string dev = $"<size={fontSize1}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.cinna), "cinna")}</size>";
+                            string dev = $"<size={fontSize1}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.cinna), "cinnabun")}</size>";
                             string name = dev + "\r\n" + rname; //DEVS
 
                             //    client.Character.RpcSetColor(13);

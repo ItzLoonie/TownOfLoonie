@@ -817,7 +817,7 @@ namespace TownOfHost
                     case CustomRoles.Egoist:
                         if (seer.GetCustomRole().IsImpostor() || //seerがImpostor
                         seer.Is(CustomRoles.EgoSchrodingerCat)) //またはEgoSchrodingerCat
-                            pva.NameText.color = Utils.GetRoleColor(CustomRoles.Egoist);//変更対象の名前をエゴイスト色にする
+                            pva.NameText.color = Utils.GetRoleColor(CustomRoles.Impostor);//変更対象の名前をエゴイスト色にする
                         break;
                     case CustomRoles.Jackal:
                         if (seer.GetCustomRole().IsJackalTeam())

@@ -2617,7 +2617,7 @@ namespace TownOfHost
                     else if (seer.GetCustomRole().IsImpostor() && //seerがインポスター
                         target.Is(CustomRoles.Egoist) && Egoist.ImpostorsKnowEgo.GetBool() //targetがエゴイスト
                     )
-                        RealName = Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Egoist), RealName); //targetの名前をエゴイスト色で表示
+                        RealName = Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), RealName); //targetの名前をエゴイスト色で表示
 
                     else if ((seer.Is(CustomRoles.EgoSchrodingerCat) && target.Is(CustomRoles.Egoist)) || //エゴ猫 --> エゴイスト
                              (seer.GetCustomRole().IsJackalTeam() && target.GetCustomRole().IsJackalTeam()) ||

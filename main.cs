@@ -63,7 +63,7 @@ namespace TownOfHost
         public static Dictionary<byte, PlayerState.DeathReason> AfterMeetingDeathPlayers = new();
         public static Dictionary<CustomRoles, string> roleColors;
         //これ変えたらmod名とかの色が変わる
-        public static string modColor = "#4FF918";
+        public static string modColor = "#2AA253";
         public static bool IsFixedCooldown => CustomRoles.Vampire.IsEnable();
         public static float RefixCooldownDelay = 0.01f;
         public static int BeforeFixMeetingCooldown = 10;
@@ -474,7 +474,7 @@ namespace TownOfHost
                     { CustomRoles.Opportunist, "#84ABFF"},
                     { CustomRoles.Survivor, "#FFE64D"},
                     { CustomRoles.SchrodingerCat, "#696969"},
-                    { CustomRoles.Egoist, "#ff1313"},
+                    { CustomRoles.Egoist, "#5600ff"},
                     { CustomRoles.EgoSchrodingerCat, "#5600ff"},
                     { CustomRoles.Jackal, "#00b4eb"},
                     { CustomRoles.Sidekick, "#00b4eb"},

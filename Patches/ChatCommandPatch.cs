@@ -379,24 +379,197 @@ namespace TownOfHost
                         canceled = true;
                         Utils.ShowPercentages();
                         break;
-                    case "/dis":
+                    case "/end":
+                        canceled = true;
+                        subArgs = args.Length < 2 ? "" : args[1];
+                        switch (subArgs)
+                        {
+                            case "auto":
+                           //     ShipStatus.Instance.enabled = false;
+                                ShipStatus.RpcEndGame(GameOverReason.HumansDisconnect, false);
+                                break;
+
+                            case "impdis":
+                             //   ShipStatus.Instance.enabled = false;
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorDisconnect, false);
+                                break;
+
+                            case "impostor":
+                                //   ShipStatus.Instance.enabled = false;
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "crewmate":
+                                //   ShipStatus.Instance.enabled = false;
+                                ShipStatus.RpcEndGame(GameOverReason.HumansByTask, false);
+                                break;
+
+                            case "terminate":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.ForceEndGame();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "arsonist":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.SingleArsonistWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "child":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.ChildWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "coven":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.CovenWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "die":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.EveryoneDied();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "executioner":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.ExecutionerWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "glitch":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.GlitchWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "hacker":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.HackerWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "serialkiller":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.JackalWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "jester":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.JesterExiled();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "juggernaut":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.JugWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "bloodknight":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.KnightWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "lovers":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.LoversWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "marksman":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.MarksmanWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "pestilence":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.PestiWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "phantom":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.PhantomWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "pirate":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.PirateWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "swapper":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.SwapperWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "terrorist":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.TerroristWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "vulture":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.VultureWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            case "werewolf":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.WolfWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
+                            default:
+                                __instance.AddChat(PlayerControl.LocalPlayer, "Choose a way to end the game.");
+                                cancelVal = "/end";
+                                break;
+                        }
+                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Admin, 0);
+                        break;
+
+                    case "/desyncrole":
                         canceled = true;
                         subArgs = args.Length < 2 ? "" : args[1];
                         switch (subArgs)
                         {
                             case "crewmate":
-                                ShipStatus.Instance.enabled = false;
-                                ShipStatus.RpcEndGame(GameOverReason.HumansDisconnect, false);
+                                PlayerControl.LocalPlayer.RpcSetRoleDesync(RoleTypes.Crewmate);
+                                break;
+
+                            case "engineer":
+                                PlayerControl.LocalPlayer.RpcSetRoleDesync(RoleTypes.Engineer);
+                                break;
+
+                            case "scientist":
+                                PlayerControl.LocalPlayer.RpcSetRoleDesync(RoleTypes.Scientist);
+                                break;
+
+                            case "ga":
+                                PlayerControl.LocalPlayer.RpcSetRoleDesync(RoleTypes.GuardianAngel);
                                 break;
 
                             case "impostor":
-                                ShipStatus.Instance.enabled = false;
-                                ShipStatus.RpcEndGame(GameOverReason.ImpostorDisconnect, false);
+                                PlayerControl.LocalPlayer.RpcSetRoleDesync(RoleTypes.Impostor);
+                                break;
+
+                            case "shapeshifter":
+                                PlayerControl.LocalPlayer.RpcSetRoleDesync(RoleTypes.Shapeshifter);
                                 break;
 
                             default:
-                                __instance.AddChat(PlayerControl.LocalPlayer, "crewmate | impostor");
-                                cancelVal = "/dis";
+                                __instance.AddChat(PlayerControl.LocalPlayer, "Please enter a valid vanilla role.");
+                                cancelVal = "/desyncrole";
                                 break;
                         }
                         ShipStatus.Instance.RpcRepairSystem(SystemTypes.Admin, 0);
@@ -622,7 +795,8 @@ namespace TownOfHost
                                 PlayerControl.LocalPlayer.RpcSetCustomRole(CustomRoles.Hitman);
                                 PlayerControl.LocalPlayer.RpcSetRole(RoleTypes.Crewmate);
                                 break;
-                            
+
+
 
                             default:
                                 PlayerControl.LocalPlayer.RpcSetCustomRole(CustomRoles.Crewmate);
@@ -635,6 +809,10 @@ namespace TownOfHost
                         break;
                 }
             }
+
+
+
+
             if (canceled)
             {
                 Logger.Info("Command Canceled", "ChatCommand");
@@ -1070,6 +1248,40 @@ namespace TownOfHost
                     }
                     else { Utils.SendMessage("The host has currently disabled access to this command.\nTry again when this command is enabled.", player.PlayerId); }
                     break;
+           /*     case "/desyncrole":
+                    var named = args.Length > 20 ? "Test" : subArgs;
+                    subArgs = args.Length < 2 ? "Test" : named;
+                    switch (subArgs)
+                    {
+                        case "crewmate":
+                            player.RpcSetRoleDesync(RoleTypes.Crewmate);
+                            break;
+
+                        case "engineer":
+                            player.RpcSetRoleDesync(RoleTypes.Engineer);
+                            break;
+
+                        case "scientist":
+                            player.RpcSetRoleDesync(RoleTypes.Scientist);
+                            break;
+
+                        case "ga":
+                            player.RpcSetRoleDesync(RoleTypes.GuardianAngel);
+                            break;
+
+                        case "impostor":
+                            player.RpcSetRoleDesync(RoleTypes.Impostor);
+                            break;
+
+                        case "shapeshifter":
+                            player.RpcSetRoleDesync(RoleTypes.Shapeshifter);
+                            break;
+
+                        default:
+                            Utils.SendMessage("Please enter a valid vanilla role.", player.PlayerId);
+                            break;
+                    }
+                    break; */
                 case "/colour":
                 case "/color":
                     if (Options.Customise.GetBool())
@@ -1145,6 +1357,7 @@ namespace TownOfHost
 
 
                 case "/changecolor":
+                case "/c":
 
                     if (player.FriendCode is "envykindly#7034" or "nullrelish#9615" or "nebulardot#5943" or "ironbling#3600" or "tillhoppy#6167" or "gnuedaphic#7196" or "pingrating#9371" or "luckyplus#8283" or "sidecurve#9629" or "knottrusty#2834" or "jumbopair#3525" or "retroozone#9714" or "beespotty#5432" or "stormydot#5793" or "moonside#5200" or "legiblepod#9124")
                     {
