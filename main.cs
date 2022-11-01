@@ -64,7 +64,8 @@ namespace TownOfHost
         public static Dictionary<CustomRoles, string> roleColors;
         //これ変えたらmod名とかの色が変わる
         public static string modColor = "#2AA253";
-        public static bool IsFixedCooldown => CustomRoles.Vampire.IsEnable();
+        public static bool IsFixedCooldown => CustomRoles.Vampire.IsEnable() && CustomRoles.NeutPoisoner.IsEnable();
+      //  public static bool IsFixedCooldown => CustomRoles.NeutPoisoner.IsEnable();
         public static float RefixCooldownDelay = 0.01f;
         public static int BeforeFixMeetingCooldown = 10;
         public static List<byte> ResetCamPlayerList;
@@ -107,7 +108,7 @@ namespace TownOfHost
         public static Dictionary<byte, byte> GuardianAngelTarget = new(); //Key : GA, Value : target
         public static Dictionary<byte, byte> PuppeteerList = new(); // Key: targetId, Value: PuppeteerId
         public static Dictionary<byte, byte> WitchedList = new(); // Key: targetId, Value: WitchId
-        public static Dictionary<byte, byte> NeutralWitchedList = new(); // Key: targetId, Value: NeutralWitchId
+     //   public static Dictionary<byte, byte> NeutralWitchedList = new(); // Key: targetId, Value: NeutralWitchId
         public static Dictionary<byte, byte> CurrentTarget = new(); //Key : Player, Value : Target
         public static Dictionary<byte, byte> SpeedBoostTarget = new();
         public static Dictionary<byte, int> MayorUsedButtonCount = new();
@@ -204,6 +205,7 @@ namespace TownOfHost
         public static int TeamCovenAlive;
         public static bool TeamPestiAlive;
         public static bool TeamJuggernautAlive;
+        public static bool TeamPoisonerAlive;
         public static bool ProtectedThisRound;
         public static bool HasProtected;
         public static int ProtectsSoFar;
@@ -404,7 +406,7 @@ namespace TownOfHost
             IgnoreWinnerCommand = Config.Bind("Other", "IgnoreWinnerCommand", true);
             WebhookURL = Config.Bind("Other", "WebhookURL", "none");
             AmDebugger = Config.Bind("Other", "AmDebugger", true);
-            AmDebugger.Value = true;
+            AmDebugger.Value = false;
             ShowPopUpVersion = Config.Bind("Other", "ShowPopUpVersion", "0");
             MessageWait = Config.Bind("Other", "MessageWait", 1);
             LastKillCooldown = Config.Bind("Other", "LastKillCooldown", (float)30);
@@ -483,7 +485,7 @@ namespace TownOfHost
                     { CustomRoles.JSchrodingerCat, "#00b4eb"},
                     { CustomRoles.Phantom, "#662962"},
                     { CustomRoles.Hitman, "#ce1924"},
-					{ CustomRoles.NeutralWitch, "#23542f"},
+				//	{ CustomRoles.NeutralWitch, "#23542f"},
                     //HideAndSeek
                     { CustomRoles.HASFox, "#e478ff"},
                     { CustomRoles.BloodKnight, "#630000"},
@@ -515,6 +517,7 @@ namespace TownOfHost
                     { CustomRoles.Bastion, "#524f4d"},
                     { CustomRoles.Hacker, "#358013"},
                     { CustomRoles.CrewPostor, "#DC6601"},
+                    { CustomRoles.NeutPoisoner, "#E91E63"},
 
                     //TEXT COLORS ROSIE
                     { CustomRoles.sns1, "#FFF9DB"},
@@ -542,7 +545,11 @@ namespace TownOfHost
                     { CustomRoles.august, "#FF00A6" },
                     { CustomRoles.cinna, "#D1DCFF" },
                     { CustomRoles.mitski, "#91008C" },
-                    { CustomRoles.waw, "#72665E" }
+                    { CustomRoles.waw, "#72665E" },
+                    { CustomRoles.ess, "#B8189A" },
+                    { CustomRoles.thic, "#ff0094"},
+                    { CustomRoles.vent, "#a500ff" },
+                    { CustomRoles.felicia, "#ff1694" }
                 };
                 foreach (var role in Enum.GetValues(typeof(CustomRoles)).Cast<CustomRoles>())
                 {
@@ -726,7 +733,8 @@ namespace TownOfHost
         Jackal,
         Sidekick,
         JSchrodingerCat,
-		NeutralWitch,
+        NeutPoisoner,
+	//	NeutralWitch,
         //HideAndSeek
         HASFox,
         HASTroll,
@@ -794,7 +802,11 @@ namespace TownOfHost
         august,
         cinna,
         mitski,
-        waw
+        waw,
+        ess,
+        thic,
+        vent,
+        felicia
     }
     //WinData
     public enum CustomWinner
@@ -825,7 +837,8 @@ namespace TownOfHost
         BloodKnight = CustomRoles.BloodKnight,
         Pirate = CustomRoles.Pirate,
         Marksman = CustomRoles.Marksman,
-        Painter = CustomRoles.Painter
+        Painter = CustomRoles.Painter,
+        NeutPoisoner = CustomRoles.NeutPoisoner
     }
     public enum AdditionalWinners
     {
@@ -837,7 +850,7 @@ namespace TownOfHost
         HASFox = CustomRoles.HASFox,
         GuardianAngelTOU = CustomRoles.GuardianAngelTOU,
         Hitman = CustomRoles.Hitman,
-        NeutralWitch = CustomRoles.NeutralWitch,
+     //   NeutralWitch = CustomRoles.NeutralWitch,
     }
     /*public enum CustomRoles : byte
     {
@@ -853,7 +866,9 @@ namespace TownOfHost
         Theta,
         Allie,
         Ben,
-        Dev
+        Dev,
+        thicvent,
+        Essence
     }
     public enum VersionTypes
     {
