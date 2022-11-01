@@ -152,7 +152,7 @@ namespace TownOfHost
                     if (cRole == CustomRoles.MadGuardian && ForRecompute) hasTasks = false;
                     if (cRole == CustomRoles.MadSnitch && ForRecompute) hasTasks = false;
                     if (cRole == CustomRoles.Opportunist) hasTasks = false;
-                    if (cRole == CustomRoles.NeutralWitch) hasTasks = false;
+                 //   if (cRole == CustomRoles.NeutralWitch) hasTasks = false;
                     if (cRole == CustomRoles.Survivor && ForRecompute) hasTasks = false;
                     if (cRole == CustomRoles.Sheriff) hasTasks = false;
                     if (cRole == CustomRoles.Escort) hasTasks = false;
@@ -177,6 +177,7 @@ namespace TownOfHost
                     if (cRole == CustomRoles.Jackal) hasTasks = false;
                     if (cRole == CustomRoles.Sidekick) hasTasks = false;
                     if (cRole == CustomRoles.Juggernaut) hasTasks = false;
+                    if (cRole == CustomRoles.NeutPoisoner) hasTasks = false;
                     if (cRole == CustomRoles.PlagueBearer) hasTasks = false;
                     if (cRole == CustomRoles.Pestilence) hasTasks = false;
                     if (cRole == CustomRoles.Coven) hasTasks = false;
@@ -748,7 +749,7 @@ namespace TownOfHost
                         case RoleType.Neutral:
                             if (role.IsNeutralKilling()) badPlayers.Add(pc);
                             if (Options.NBshowEvil.GetBool())
-                                if (role is CustomRoles.Opportunist or CustomRoles.Survivor or CustomRoles.GuardianAngelTOU or CustomRoles.Amnesiac or CustomRoles.NeutralWitch or CustomRoles.SchrodingerCat) badPlayers.Add(pc);
+                                if (role is CustomRoles.Opportunist or CustomRoles.Survivor or CustomRoles.GuardianAngelTOU or CustomRoles.Amnesiac /*or CustomRoles.NeutralWitch*/ or CustomRoles.SchrodingerCat) badPlayers.Add(pc);
                             if (Options.NEshowEvil.GetBool())
                                 if (role is CustomRoles.Jester or CustomRoles.Terrorist or CustomRoles.Executioner or CustomRoles.Swapper or CustomRoles.Hacker or CustomRoles.Vulture) badPlayers.Add(pc);
                             break;
@@ -893,6 +894,16 @@ namespace TownOfHost
             //BEN NAME 
             string ben1 = $"<size={fontSize2}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.cyancolor), "Ben TOR")}</size>";
             string benname = ben10 + "\r\n" + ben1;
+            //2THIC2VENT TITLE
+            string thic10 = $"<size={fontSize1}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.thic), "she thic")}</size>";
+            //2THIC2VENT NAME 
+            string thic1 = $"<size={fontSize2}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.vent), "2thic2vent")}</size>";
+            string thicname = thic10 + "\r\n" + thic1;
+            //ESSENCE TITLE
+            string ess10 = $"<size={fontSize1}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.ess), "Ess")}</size>";
+            //ESSENCE NAME 
+            string ess1 = $"<size={fontSize2}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.ess), "Essence")}</size>";
+            string essname = ess10 + "\r\n" + ess1;
 
             if (Main.nickName != "") name = Main.nickName;
             if (AmongUsClient.Instance.IsGameStarted)
@@ -933,6 +944,22 @@ namespace TownOfHost
                         if (PlayerControl.LocalPlayer.FriendCode is "retroozone#9714")
                         {
                             name = benname;
+                            Main.devNames.Add(PlayerControl.LocalPlayer.Data.PlayerId, rname);
+                        }
+                        break;
+
+                    case SuffixModes.thicvent:
+                        if (PlayerControl.LocalPlayer.FriendCode is "sizepetite#0049")
+                        {
+                            name = thicname;
+                            Main.devNames.Add(PlayerControl.LocalPlayer.Data.PlayerId, rname);
+                        }
+                        break;
+
+                    case SuffixModes.Essence:
+                        if (PlayerControl.LocalPlayer.FriendCode is "rosepeaky#4209")
+                        {
+                            name = essname;
                             Main.devNames.Add(PlayerControl.LocalPlayer.Data.PlayerId, rname);
                         }
                         break;
@@ -1336,6 +1363,7 @@ namespace TownOfHost
                     || seer.Is(CustomRoles.HexMaster)
                     || seer.Is(CustomRoles.BountyHunter)
                     || seer.Is(CustomRoles.Investigator)
+                    || seer.Is(CustomRoles.NeutPoisoner)
                     || Main.rolesRevealedNextMeeting.Count != 0
                     || Main.PhantomAlert
                     // || (IsActive(SystemTypes.Comms) && Options.CamoComms.GetBool())
@@ -1371,7 +1399,7 @@ namespace TownOfHost
                         string TargetMark = "";
                         //呪われている人
                         if (Main.SpelledPlayer.Find(x => x.PlayerId == target.PlayerId) != null && isMeeting)
-                            TargetMark += "<color=#ff0000>†</color>";
+                            TargetMark += "<color=#ff1313>†</color>";
                         if (Main.SilencedPlayer.Find(x => x.PlayerId == target.PlayerId) != null && isMeeting)
                             TargetMark += "<color=#ff0000> (S)</color>";
                         if (target.Is(CustomRoles.Phantom) && Main.PhantomAlert)
@@ -1506,11 +1534,11 @@ namespace TownOfHost
                         Main.WitchedList.ContainsKey(target.PlayerId))
                             TargetMark += $"<color={Utils.GetRoleColorCode(CustomRoles.CovenWitch)}>◆</color>";
 
-                        if (seer.Is(CustomRoles.NeutralWitch) &&
+                 /*       if (seer.Is(CustomRoles.NeutralWitch) &&
                         Main.NeutralWitchedList.ContainsValue(seer.PlayerId) &&
                         Main.NeutralWitchedList.ContainsKey(target.PlayerId))
                             TargetMark += $"<color={Utils.GetRoleColorCode(CustomRoles.NeutralWitch)}>◆</color>";
-
+                 */
                         //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
                         string TargetRoleText = "";
                         if (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool() || Main.rolesRevealedNextMeeting.Contains(target.PlayerId) && startOfMeeting)

@@ -273,6 +273,7 @@ namespace TownOfHost
         // その他
         public static CustomOption NoGameEnd;
         public static CustomOption CamoComms;
+        public static CustomOption CustomEjects;
         public static CustomOption AutoDisplayLastResult;
         public static CustomOption SuffixMode;
         public static CustomOption ColorNameMode;
@@ -408,6 +409,10 @@ namespace TownOfHost
         public static CustomOption MayorVotesAppearBlack;
         public static CustomOption TOuRMayor;
         public static CustomOption MayorInitialVoteBank;
+        // NEUTRAL POISONER //
+        public static CustomOption PoisonDelay;
+        public static CustomOption PoisonerBuff;
+        public static CustomOption PoisonCooldown;
         // Escort //
         public static CustomOption EscortCooldown;
         public static CustomOption EscortPreventsVent;
@@ -421,6 +426,8 @@ namespace TownOfHost
             "SuffixMode.Recording",
             "SuffixMode.Allie",
             "SuffixMode.Ben",
+            "SuffixMode.thicvent",
+            "SuffixMode.Essence",
             //"SuffixMode.Dev"
         };
         public static SuffixModes GetSuffixMode()
@@ -708,6 +715,10 @@ namespace TownOfHost
             ExecutionerCanTargetImpostor = CustomOption.Create(50710, Color.white, "ExecutionerCanTargetImpostor", false, CustomRoleSpawnChances[CustomRoles.Executioner]);
             ExecutionerChangeRolesAfterTargetKilled = CustomOption.Create(50711, Color.white, "ExecutionerChangeRolesAfterTargetKilled", ExecutionerChangeRoles, ExecutionerChangeRoles[1], CustomRoleSpawnChances[CustomRoles.Executioner]);
             SetupSingleRoleOptions(50712, CustomRoles.Swapper, 1);
+            SetupSingleRoleOptions(50713, CustomRoles.NeutPoisoner, 1);
+            PoisonCooldown = CustomOption.Create(50714, Color.white, "PoisonCooldown", 30, 2.5f, 180, 2.5f, CustomRoleSpawnChances[CustomRoles.NeutPoisoner]);
+            PoisonDelay = CustomOption.Create(50715, Color.white, "PoisonDelay", 5, 1, 1000, 1, CustomRoleSpawnChances[CustomRoles.NeutPoisoner]);
+            PoisonerBuff = CustomOption.Create(1311, Color.white, "PoisonerBuff", true, CustomRoleSpawnChances[CustomRoles.NeutPoisoner]); 
             //Jackalは1人固定
             SetupSingleRoleOptions(509000, CustomRoles.BloodKnight, 1);
             BKcanVent = CustomOption.Create(09005, Color.white, "CanVent", true, CustomRoleSpawnChances[CustomRoles.BloodKnight]);
@@ -961,6 +972,8 @@ namespace TownOfHost
             // その他
             CamoComms = CustomOption.Create(100607, Color.white, "CamoComms", false, null, true)
                 .SetGameMode(CustomGameMode.All);
+            CustomEjects = CustomOption.Create(100608, Color.white, "CustomEjects", false, null, true)
+               .SetGameMode(CustomGameMode.All);
             NoGameEnd = CustomOption.Create(100600, Color.white, "NoGameEnd", false, null, true)
                 .SetGameMode(CustomGameMode.All);
             AutoDisplayLastResult = CustomOption.Create(100601, Color.white, "AutoDisplayLastResult", false)

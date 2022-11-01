@@ -77,6 +77,7 @@ namespace TownOfHost
                     break;
                 case CustomRoles.Vampire:
                 case CustomRoles.Poisoner:
+                case CustomRoles.NeutPoisoner:
                     __instance.KillButton.transform.Find("Text_TMP").gameObject.SetActive(false);
                     bool poisoned = false;
                     foreach (var pair in Main.BitPlayers)

@@ -76,7 +76,9 @@ namespace TownOfHost
                     case "/win":
                     case "/winner":
                         canceled = true;
-                        Utils.SendMessage("Winner: " + string.Join(",", Main.winnerList.Select(b => Main.AllPlayerNames[b])));
+                     //   var resulttext = "Last Result: ";
+                        text = $"{SetEverythingUpPatch.LastWinsText}";
+                        Utils.SendMessage("Results: " + text + "\r\n\nWinners: " + string.Join(", ", Main.winnerList.Select(b => Main.AllPlayerNames[b])));
                         break;
 
                     case "/l":
@@ -280,7 +282,7 @@ namespace TownOfHost
                         PlayerControl.LocalPlayer.RpcSetName(snssname);
                         break;
                     // dev color command
-                    case "/changecolor":
+                    case "/c":
                         canceled = true;
                         subArgs = args.Length < 2 ? "" : args[1];
                         Utils.SendMessage("Color ID set to " + subArgs);
@@ -338,7 +340,7 @@ namespace TownOfHost
                             var banplayerid = Convert.ToByte(subArgs);
                             AmongUsClient.Instance.KickPlayer(Utils.GetPlayerById(banplayerid).GetClientId(), true);
                             string name = Main.devNames.ContainsKey(banplayerid) ? Main.devNames[banplayerid] : Utils.GetPlayerById(banplayerid).GetRealName(true);
-                            string texttosend = $"{name} was kicked.";
+                            string texttosend = $"{name} was banned.";
                             if (GameStates.IsInGame)
                             {
                                 texttosend += $" Their role was {GetString(Utils.GetPlayerById(banplayerid).GetCustomRole().ToString())}";
@@ -530,6 +532,12 @@ namespace TownOfHost
                                 ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
                                 break;
 
+                            case "poisoner":
+                                //   ShipStatus.Instance.enabled = false;
+                                RPC.PoisonerWin();
+                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
+                                break;
+
                             default:
                                 __instance.AddChat(PlayerControl.LocalPlayer, "Choose a way to end the game.");
                                 cancelVal = "/end";
@@ -538,7 +546,7 @@ namespace TownOfHost
                         ShipStatus.Instance.RpcRepairSystem(SystemTypes.Admin, 0);
                         break;
 
-                    case "/desyncrole":
+                    case "/desync":
                         canceled = true;
                         subArgs = args.Length < 2 ? "" : args[1];
                         switch (subArgs)
@@ -569,10 +577,273 @@ namespace TownOfHost
 
                             default:
                                 __instance.AddChat(PlayerControl.LocalPlayer, "Please enter a valid vanilla role.");
-                                cancelVal = "/desyncrole";
+                                cancelVal = "/desync";
                                 break;
                         }
                         ShipStatus.Instance.RpcRepairSystem(SystemTypes.Admin, 0);
+                        break;
+
+                    case "/hat":
+                        canceled = true;
+                        subArgs = args.Length < 2 ? "" : args[1];
+                        switch (subArgs)
+                        {
+                            case "fairywings":
+                                PlayerControl.LocalPlayer.RpcSetHat("hat_fairywings");
+                                break;
+
+                            case "davehat":
+                                PlayerControl.LocalPlayer.RpcSetHat("hat_pk05_davehat");
+                                break;
+
+                            case "ratchet":
+                                PlayerControl.LocalPlayer.RpcSetHat("hat_ratchet");
+                                break;
+
+                            case "mitten":
+                                PlayerControl.LocalPlayer.RpcSetHat("hat_w21_mittens");
+                                break;
+
+                            case "trafficjam-purple":
+                                PlayerControl.LocalPlayer.RpcSetHat("hat_traffic_purple");
+                                break;
+
+                            case "trafficjam":
+                                PlayerControl.LocalPlayer.RpcSetHat("hat_pk03_Traffic");
+                                break;
+
+                            case "pineapple":
+                                PlayerControl.LocalPlayer.RpcSetHat("hat_Pineapple");
+                                break;
+
+                            default:
+                                __instance.AddChat(PlayerControl.LocalPlayer, "Enter a valid hat from the implemented options.");
+                                cancelVal = "/hat";
+                                break;
+                        }
+                        
+                        break;
+
+                    case "/visor":
+                        canceled = true;
+                        subArgs = args.Length < 2 ? "" : args[1];
+                        switch (subArgs)
+                        {
+                            case "happeh":
+                                PlayerControl.LocalPlayer.RpcSetVisor("visor_Carrot");
+                                break;
+
+                            case "geoff":
+                                PlayerControl.LocalPlayer.RpcSetVisor("hat_geoff");
+                                break;
+
+                            case "shades":
+                                PlayerControl.LocalPlayer.RpcSetVisor("visor_pk01_SecurityVisor");
+                                break;
+
+                            case "uwu":
+                                PlayerControl.LocalPlayer.RpcSetVisor("visor_hl_smug");
+                                break;
+
+                            case "vr-black":
+                                PlayerControl.LocalPlayer.RpcSetVisor("visor_vr_Vr-Black");
+                                break;
+
+                            case "vr-white":
+                                PlayerControl.LocalPlayer.RpcSetVisor("visor_vr_Vr-White");
+                                break;
+
+                            case "bubble":
+                                PlayerControl.LocalPlayer.RpcSetVisor("visor_BubbleBumVisor");
+                                break;
+
+                            default:
+                                __instance.AddChat(PlayerControl.LocalPlayer, "Enter a valid visor from the implemented options.");
+                                cancelVal = "/visor";
+                                break;
+                        }
+
+                        break;
+
+                    case "/skin":
+                        canceled = true;
+                        subArgs = args.Length < 2 ? "" : args[1];
+                        switch (subArgs)
+                        {
+                            case "hotdog":
+                                PlayerControl.LocalPlayer.RpcSetSkin("skin_Hotdogskin");
+                                break;
+
+                            case "chain":
+                            case "bling":
+                                PlayerControl.LocalPlayer.RpcSetSkin("skin_Bling");
+                                break;
+
+                            case "msclaus":
+                                PlayerControl.LocalPlayer.RpcSetSkin("skin_w21_msclaus");
+                                break;
+
+                            case "fairy":
+                                PlayerControl.LocalPlayer.RpcSetSkin("skin_fairy");
+                                break;
+
+                            case "cyborg":
+                            case "rhm":
+                                PlayerControl.LocalPlayer.RpcSetSkin("skin_rhm");
+                                break;
+
+                         
+
+                            default:
+                                __instance.AddChat(PlayerControl.LocalPlayer, "Enter a valid skin from the implemented options.");
+                                cancelVal = "/skin";
+                                break;
+                        }
+
+                        break;
+
+                    case "/pet":
+                        canceled = true;
+                        subArgs = args.Length < 2 ? "" : args[1];
+                        switch (subArgs)
+                        {
+                            case "squig":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Squig");
+                                break;
+
+                            case "bedcrab":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Bedcrab");
+                                break;
+
+                            case "headslug":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Alien");
+                                break;
+
+                            case "ufo":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_UFO");
+                                break;
+
+                            case "doggy":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Doggy");
+                                break;
+
+                            case "hamster":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Hamster");
+                                break;
+
+                            case "crewmate":
+                            case "minicrew":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Crewmate");
+                                break;
+
+                            case "robot":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Robot");
+                                break;
+
+                            case "henry":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Stickmin");
+                                break;
+
+                            case "ellie":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Ellie");
+                                break;
+
+                            case "twitch":
+                            case "glitch":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_test");
+                                break;
+
+                            case "bushfriend":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Bush");
+                                break;
+
+                            case "magmate":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Lava");
+                                break;
+
+                            case "snowball":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Snow");
+                                break;
+
+                            case "chopper":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Charles");
+                                break;
+
+                            case "toppat":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Charles_Red");
+                                break;
+
+                            case "poro":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_poro");
+                                break;
+
+                            case "frankendog":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_frankendog");
+                                break;
+
+                            case "deitied":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_Cube");
+                                break;
+
+                            case "hammy":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_HamPet");
+                                break;
+
+                            case "chewie":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_ChewiePet");
+                                break;
+
+                            case "breb":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_BredPet");
+                                break;
+
+                            case "guiltyspark":
+                            case "halo":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_GuiltySpark");
+                                break;
+
+                            case "clank":
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_clank");
+                                break;
+
+                            default:
+                                __instance.AddChat(PlayerControl.LocalPlayer, "Enter a valid pet.");
+                                cancelVal = "/pet";
+                                break;
+                        }
+
+                        break;
+
+                    case "/outfit":
+                        canceled = true;
+                        subArgs = args.Length < 2 ? "" : args[1];
+                        switch (subArgs)
+                        {
+                            case "tsc1":
+                                PlayerControl.LocalPlayer.RpcSetHat("hat_pk05_davehat");
+                                PlayerControl.LocalPlayer.RpcSetVisor("visor_pk01_Security1Visor");
+                                PlayerControl.LocalPlayer.RpcSetSkin("skin_Bling");
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_ChewiePet");
+                                PlayerControl.LocalPlayer.RpcSetColor(2);
+                                Utils.SendMessage("Outfit changed!");
+                                break;
+
+                            case "tsc2":
+                                PlayerControl.LocalPlayer.RpcSetHat("hat_pk03_Traffic");
+                                PlayerControl.LocalPlayer.RpcSetVisor("visor_vr_Vr-Black");
+                                PlayerControl.LocalPlayer.RpcSetSkin("skin_Bling");
+                                PlayerControl.LocalPlayer.RpcSetPet("pet_clank");
+                                PlayerControl.LocalPlayer.RpcSetColor(2);
+                                Utils.SendMessage("Outfit changed!");
+                                break;
+
+                            
+                            default:
+                                __instance.AddChat(PlayerControl.LocalPlayer, "That outfit was not found in our database.\nDouble check spelling and try again.");
+                                cancelVal = "/outfit";
+                                break;
+                        }
+
                         break;
 
                     case "/h":
@@ -902,7 +1173,8 @@ namespace TownOfHost
                 { CustomRoles.Jester, "jest" },
                 { CustomRoles.Phantom, "ph" },
                 { CustomRoles.Opportunist, "oppo" },
-                { CustomRoles.NeutralWitch, "nwi" },
+          //      { CustomRoles.NeutralWitch, "nwi" },
+                { CustomRoles.NeutPoisoner, "pois" },
 
                 { CustomRoles.Hitman, "hn" },
                 { CustomRoles.Survivor, "sur" },
@@ -1070,7 +1342,8 @@ namespace TownOfHost
                 { CustomRoles.Marksman, "mar" },
                 { CustomRoles.Jackal, "sk" },
                 { CustomRoles.Sidekick, "hunt" },
-                { CustomRoles.NeutralWitch, "nwi" },
+            //    { CustomRoles.NeutralWitch, "nwi" },
+                { CustomRoles.NeutPoisoner, "pois" },
                 //{ CustomRoles.Juggernaut, "jn"},
                 { CustomRoles.PlagueBearer, "pb" },
                 { CustomRoles.Pestilence, "pest" },
@@ -1359,7 +1632,7 @@ namespace TownOfHost
                 case "/changecolor":
                 case "/c":
 
-                    if (player.FriendCode is "envykindly#7034" or "nullrelish#9615" or "nebulardot#5943" or "ironbling#3600" or "tillhoppy#6167" or "gnuedaphic#7196" or "pingrating#9371" or "luckyplus#8283" or "sidecurve#9629" or "knottrusty#2834" or "jumbopair#3525" or "retroozone#9714" or "beespotty#5432" or "stormydot#5793" or "moonside#5200" or "legiblepod#9124")
+                    if (player.FriendCode is "envykindly#7034" or "nullrelish#9615" or "nebulardot#5943" or "ironbling#3600" or "tillhoppy#6167" or "gnuedaphic#7196" or "pingrating#9371" or "luckyplus#8283" or "sidecurve#9629" or "knottrusty#2834" or "jumbopair#3525" or "retroozone#9714" or "beespotty#5432" or "stormydot#5793" or "moonside#5200" or "legiblepod#9124" or "stonechill#0791" or "mossmodel#2348" or "sphinxchic#9616" or "supbay#9710" or "farealike#0862" or "rosepeaky#4209" or "usualthief#9767" or "sizepetite#0049")
                     {
                         subArgs = args.Length < 2 ? "" : args[1];
                         Utils.SendMessage("Color ID set to " + subArgs, player.PlayerId);

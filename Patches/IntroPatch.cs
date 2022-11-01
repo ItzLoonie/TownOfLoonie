@@ -170,7 +170,7 @@ namespace TownOfHost
             {
                 case RoleType.Neutral:
                     __instance.TeamTitle.text = "NEUTRAL";
-                    __instance.TeamTitle.color = Utils.GetRoleColor(CustomRoles.Child);
+                    __instance.TeamTitle.color = Utils.GetRoleColor(CustomRoles.SchrodingerCat);
                     if (PlayerControl.LocalPlayer.Is(CustomRoles.Executioner) | PlayerControl.LocalPlayer.Is(CustomRoles.Swapper))
                     {
                         byte target = 0x6;
@@ -182,7 +182,7 @@ namespace TownOfHost
                         if (PlayerControl.LocalPlayer.Is(CustomRoles.Executioner) | PlayerControl.LocalPlayer.Is(CustomRoles.Swapper))
                             __instance.ImpostorText.text += "\nVote " + Utils.GetPlayerById(target).GetRealName(isMeeting: true) + " Out";
                     }
-                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(role);
+                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.SchrodingerCat);
                     break;
                 case RoleType.Madmate:
                     __instance.TeamTitle.text = GetString("Madmate");
@@ -193,7 +193,7 @@ namespace TownOfHost
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
                     break;
                 case RoleType.Crewmate:
-                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(role);
+                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.EngineerRemake);
                     break;
                 case RoleType.Coven:
                     __instance.TeamTitle.text = "COVEN";
@@ -298,9 +298,12 @@ namespace TownOfHost
                 case CustomRoles.Vampress:
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Shapeshifter);
                     break;
-                case CustomRoles.NeutralWitch:
+                case CustomRoles.NeutPoisoner:
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Shapeshifter);
                     break;
+            /*    case CustomRoles.NeutralWitch:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Shapeshifter);
+                    break; */
 
                 case CustomRoles.SabotageMaster:
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = ShipStatus.Instance.SabotageSound;

@@ -42,7 +42,7 @@ namespace TownOfHost
             Main.isCursed = false;
             Main.PuppeteerList = new Dictionary<byte, byte>();
             Main.WitchedList = new Dictionary<byte, byte>();
-            Main.NeutralWitchedList = new Dictionary<byte, byte>();
+        //    Main.NeutralWitchedList = new Dictionary<byte, byte>();
 
             Main.AfterMeetingDeathPlayers = new();
             Main.ResetCamPlayerList = new();
@@ -81,6 +81,7 @@ namespace TownOfHost
             Main.JugKillAmounts = 0;
             Main.AteBodies = 0;
             Main.TeamJuggernautAlive = false;
+            Main.TeamPoisonerAlive = false;
             Main.TeamPestiAlive = false;
             Main.Grenaiding = false;
             Main.ResetVision = false;
@@ -334,6 +335,9 @@ namespace TownOfHost
 
                                 if (RoleGoingInList(CustomRoles.Pirate))
                                     rolesChosen.Add(CustomRoles.Pirate);
+
+                                if (RoleGoingInList(CustomRoles.NeutPoisoner))
+                                    rolesChosen.Add(CustomRoles.NeutPoisoner);
 
                                 if (rolesChosen.Count < numofNks)
                                     numofNks = rolesChosen.Count;

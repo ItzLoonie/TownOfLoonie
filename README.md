@@ -145,7 +145,7 @@ Below is an example:
 | [TimeThief](#timethief)             | [Sheriff](#sheriff)               | [Pirate](#guesser)                | [Serial Killer](#serial-killer) |                                | [Watcher](#watcher)       |
 | [Vampire](#vampire)                 | [Snitch](#snitch)                 | [Guardian-Angel](#guardian-angel) | [Marksman](#marksman)           |                                | [Diseased](#diseased)     |
 | [Warlock](#warlock)                 | [SpeedBooster](#speedbooster)     | [Amnesiac](#amnesiac)             | [Crewpostor](#crewpostor)       |                                |                           |
-| [Witch](#witch)                     | [Trapper](#trapper)               | [Phantom](#phantom)               |                                 |                                |                           |
+| [Witch](#witch)                     | [Trapper](#trapper)               | [Phantom](#phantom)               | [Poisoner](#poisoner)           |                                |                           |
 | [Mafia](#mafia)                     | [Demolitionist](#demolitionist)   | [Swapper](#swapper)               |                                 |                                |                           |
 | [Madmate](#madmate)                 | [Bastion](#bastion)               | [Hitman](#hitman)                 |                                 |                                |                           |
 | [MadGuardian](#madguardian)         | [Vigilante](#guesser)             |                                   |                                 |                                |                           |
@@ -1158,6 +1158,15 @@ Victory Conditions : Survive to the end<br>
 The Hitman is a neutral benign role with the ability to kill.<br>
 Hitman can win with anyone and does not count as a killer.<br>
 Optionally, Hitman can also win with roles like Jester and Executioner.<br>
+
+### Poisoner
+
+Team : Neutral<br>
+Basis : Impostor<br>
+Victory Conditions : Kill everyone with poison<br>
+
+The Poisoner is a neutral killer with delayed kills rather than direct.<br>
+They win alone and must kill everyone to win.<br>
 
 ## Coven
 

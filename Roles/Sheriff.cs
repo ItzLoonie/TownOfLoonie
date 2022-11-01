@@ -232,6 +232,7 @@ namespace TownOfHost
                 CustomRoles.Egoist => CanKillEgoist.GetBool(),
                 CustomRoles.EgoSchrodingerCat => CanKillEgoShrodingerCat.GetBool(),
                 CustomRoles.Jackal => CanKillJackal.GetBool(),
+                CustomRoles.NeutPoisoner => CanKillJackal.GetBool(),
                 CustomRoles.Sidekick => CanKillJackal.GetBool(),
                 CustomRoles.JSchrodingerCat => CanKillJShrodingerCat.GetBool(),
                 CustomRoles.PlagueBearer => CanKillPlagueBearer.GetBool(),

@@ -145,6 +145,7 @@ namespace TownOfHost
                 listUp(Options.DisableDevices);
                 nameAndValue(Options.NoGameEnd);
                 nameAndValue(Options.CamoComms);
+                nameAndValue(Options.CustomEjects);
                 nameAndValue(Options.Customise);
                 nameAndValue(Options.RolesLikeToU);
                 nameAndValue(Options.DisableTaskWin);

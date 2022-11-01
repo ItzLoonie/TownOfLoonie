@@ -458,6 +458,9 @@ namespace TownOfHost
                     case CustomWinner.Pestilence:
                         PestiWin();
                         break;
+                    case CustomWinner.NeutPoisoner:
+                        PoisonerWin();
+                        break;
 
                     default:
                         if (Main.currentWinner != CustomWinner.Default)
@@ -470,6 +473,12 @@ namespace TownOfHost
                 Logger.Error($"正常にEndGameを行えませんでした。{ex}", "EndGame");
             }
         }
+
+        private static void NeutPoisWin()
+        {
+            throw new NotImplementedException();
+        }
+
         public static void TrollWin(byte trollID)
         {
             Main.WonTrollID = trollID;
@@ -597,6 +606,12 @@ namespace TownOfHost
         public static void WolfWin()
         {
             Main.currentWinner = CustomWinner.Werewolf;
+            CustomWinTrigger(0);
+        }
+
+        public static void PoisonerWin()
+        {
+            Main.currentWinner = CustomWinner.NeutPoisoner;
             CustomWinTrigger(0);
         }
         public static void KnightWin()
@@ -839,6 +854,46 @@ namespace TownOfHost
         }
         public static void ResetCurrentInfectingTarget(byte pbId) => SetCurrentInfectingTarget(pbId, 255);
         public static void ResetCurrentDousingTarget(byte arsonistId) => SetCurrentDousingTarget(arsonistId, 255);
+
+        internal static void ChildWin()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void ExecutionerWin()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void HackerWin()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void JesterExiled()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void PhantomWin()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void PirateWin()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void SwapperWin()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void TerroristWin()
+        {
+            throw new NotImplementedException();
+        }
     }
     [HarmonyPatch(typeof(InnerNet.InnerNetClient), nameof(InnerNet.InnerNetClient.StartRpc))]
     class StartRpcPatch

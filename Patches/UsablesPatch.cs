@@ -78,6 +78,8 @@ namespace TownOfHost
                 canUse = couldUse = true;
             else if (pc.Object.Is(CustomRoles.Necromancer))
                 canUse = couldUse = Necromancer.CanUseVent();
+           /* else if (pc.Object.Is(CustomRoles.NeutPoisoner))
+                canUse = couldUse = Necromancer.CanUseVent(); */
             else if (pc.Object.Is(CustomRoles.CovenWitch) && Main.HasNecronomicon)
                 canUse = couldUse = true;
             else if (pc.Object.Is(CustomRoles.HexMaster) && Main.HasNecronomicon)

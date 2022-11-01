@@ -80,7 +80,8 @@ namespace TownOfHost
                 CustomRoles.HASTroll or
                 CustomRoles.Painter or
                 CustomRoles.HASFox or
-				CustomRoles.NeutralWitch;
+            //    CustomRoles.NeutralWitch or
+                CustomRoles.NeutPoisoner;
         }
         public static bool IsNeutralBad(this CustomRoles role)
         {
@@ -108,7 +109,8 @@ namespace TownOfHost
                 CustomRoles.BloodKnight or
                 CustomRoles.HASTroll or
                 CustomRoles.Painter or
-				CustomRoles.NeutralWitch;
+             //   CustomRoles.NeutralWitch or
+                CustomRoles.NeutPoisoner;
         }
         public static bool IsNonNK(this CustomRoles role)
         {
@@ -124,8 +126,8 @@ namespace TownOfHost
                 CustomRoles.GuardianAngelTOU or
                 CustomRoles.Amnesiac or
                 CustomRoles.JSchrodingerCat or
-                CustomRoles.Hacker or
-				CustomRoles.NeutralWitch;
+                CustomRoles.Hacker; /*or
+				CustomRoles.NeutralWitch;*/
         }
         public static bool UsesVents(this CustomRoles role)
         {
@@ -150,7 +152,8 @@ namespace TownOfHost
                 CustomRoles.Werewolf or
                 CustomRoles.Pirate or
                 CustomRoles.BloodKnight or
-                CustomRoles.Juggernaut;
+                CustomRoles.Juggernaut or
+                CustomRoles.NeutPoisoner;
         }
         public static bool IsJackalTeam(this CustomRoles role)
         {
@@ -285,7 +288,7 @@ namespace TownOfHost
                 CustomRoles.Jackal or
                 CustomRoles.Crusader or
                 CustomRoles.Sidekick or
-				CustomRoles.NeutralWitch;
+				CustomRoles.NeutPoisoner;
         }
         public static bool CanRoleBlock(this CustomRoles role)
         {

@@ -573,7 +573,7 @@ namespace TownOfHost
                     opt.RoleOptions.ShapeshifterDuration = Options.ShapeshifterDuration.GetFloat();
                     opt.RoleOptions.ShapeshifterLeaveSkin = Options.ShapeshifterSkin.GetBool();
                     break;
-                case CustomRoles.NeutralWitch:
+             //   case CustomRoles.NeutralWitch:
                
 
 
@@ -859,7 +859,8 @@ namespace TownOfHost
                 CustomRoles.Werewolf => true,
                 CustomRoles.TheGlitch => true,
                 CustomRoles.Medusa => true,
-                CustomRoles.NeutralWitch => true,
+           //     CustomRoles.NeutralWitch => true,
+                CustomRoles.NeutPoisoner => true,
                 CustomRoles.Coven => true,
                 CustomRoles.Painter => true,
                 CustomRoles.Janitor => true,
@@ -1060,8 +1061,11 @@ namespace TownOfHost
                 case CustomRoles.Painter:
                     Main.AllPlayerKillCooldown[player.PlayerId] = Options.STCD.GetFloat() * 2;
                     break;
-                case CustomRoles.NeutralWitch:
+             /*   case CustomRoles.NeutralWitch:
                     Main.AllPlayerKillCooldown[player.PlayerId] = Options.ControlCooldown.GetFloat();
+                    break; */
+                case CustomRoles.NeutPoisoner:
+                    Main.AllPlayerKillCooldown[player.PlayerId] = Options.PoisonCooldown.GetFloat();
                     break;
             }
             if (player.IsLastImpostor())
@@ -1335,6 +1339,10 @@ namespace TownOfHost
                     DestroyableSingleton<HudManager>.Instance.ImpostorVentButton.ToggleVisible(Options.STIgnoreVent.GetBool() && !player.Data.IsDead);
                     player.Data.Role.CanVent = Options.STIgnoreVent.GetBool();
                     break;
+                case CustomRoles.NeutPoisoner:
+                    player.Data.Role.CanVent = false;
+                   // player.Data.Role.CanUseKillButton = true;
+                    break;
             }
         }
         public static bool IsDouseDone(this PlayerControl player)
@@ -1428,7 +1436,8 @@ namespace TownOfHost
                 CustomRoles.BloodKnight or
                 CustomRoles.CorruptedSheriff or
                 CustomRoles.TheGlitch or
-                CustomRoles.Werewolf;
+                CustomRoles.Werewolf or
+                CustomRoles.NeutPoisoner;
         }
 
         public static bool IsDesyncRole(this PlayerControl player)
@@ -1453,7 +1462,8 @@ namespace TownOfHost
                 CustomRoles.BloodKnight or
                 CustomRoles.CorruptedSheriff or
                 CustomRoles.TheGlitch or
-                CustomRoles.Werewolf;
+                CustomRoles.Werewolf or
+                CustomRoles.NeutPoisoner;
         }
         //汎用
         public static bool Is(this PlayerControl target, CustomRoles role) =>

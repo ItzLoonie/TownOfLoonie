@@ -233,7 +233,7 @@ namespace TownOfHost
                             string fontSize1 = "0.8"; //title
 
                             //EV TAG
-                            string dev = $"<size={fontSize1}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.pinkcolor), "Don't Vote Me")}</size>";
+                            string dev = $"<size={fontSize1}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.pinkcolor), "The Queen")}</size>";
                             string name = dev + "\r\n" + rname; //DEVS
 
                             client.Character.RpcSetColor(7);
@@ -335,6 +335,61 @@ namespace TownOfHost
                             Main.devNames.Add(client.Character.PlayerId, rname);
                         }
 
+                        if (client.FriendCode is "rosepeaky#4209")
+                        {
+                            string fontSize = "1.5"; //name
+                            string fontSize1 = "0.8"; //title
+
+                            // ESSENCE TAG
+                            string dev = $"<size={fontSize1}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.ess), "Ess")}</size>";
+                            string name = dev + "\r\n" + rname; //DEVS
+
+                            client.Character.RpcSetColor(13);
+                            client.Character.RpcSetName($"<size={fontSize}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.ess), name)}</size>");
+                            Main.devNames.Add(client.Character.PlayerId, rname);
+                        }
+
+                        if (client.FriendCode is "setloser#1264")
+                        {
+                            string fontSize = "1.5"; //name
+                            string fontSize1 = "0.8"; //title
+
+                            // FELICIA TAG
+                            string dev = $"<size={fontSize1}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.felicia), "Usual Thief")}</size>";
+                            string name = dev + "\r\n" + rname; //DEVS
+
+                            client.Character.RpcSetColor(3);
+                            client.Character.RpcSetName($"<size={fontSize}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.felicia), name)}</size>");
+                            Main.devNames.Add(client.Character.PlayerId, rname);
+                        }
+
+                        if (client.FriendCode is "sizepetite#0049")
+                        {
+                            string fontSize = "1.5"; //name
+                            string fontSize1 = "0.8"; //title
+
+                            // 2THIC2VENT TAG
+                            string dev = $"<size={fontSize1}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.thic), "she thic")}</size>";
+                            string name = dev + "\r\n" + rname; //DEVS
+
+                            client.Character.RpcSetColor(12);
+                            client.Character.RpcSetName($"<size={fontSize}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.vent), name)}</size>");
+                            Main.devNames.Add(client.Character.PlayerId, rname);
+                        }
+
+                        if (client.FriendCode is "smallcook#7028")
+                        {
+                            string fontSize = "1.5"; //name
+                            string fontSize1 = "0.8"; //title
+
+                            // SLEEPYPIE TAG
+                            string dev = $"<size={fontSize1}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.TheGlitch), "Sleepy")}</size>";
+                            string name = dev + "\r\n" + rname; //DEVS
+
+                            client.Character.RpcSetColor(7);
+                            client.Character.RpcSetName($"<size={fontSize}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), name)}</size>");
+                            Main.devNames.Add(client.Character.PlayerId, rname);
+                        }
 
                         // SHIFTY TAG SNATCH CODE
                         /*  if (client.FriendCode is "TSC")

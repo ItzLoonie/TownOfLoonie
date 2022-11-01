@@ -101,6 +101,7 @@ namespace TownOfHost
                 CustomRoles.Jackal => NKareRed.GetBool(),
                 CustomRoles.Sidekick => NKareRed.GetBool(),
                 CustomRoles.Juggernaut => NKareRed.GetBool(),
+                CustomRoles.NeutPoisoner => NKareRed.GetBool(),
                 CustomRoles.JSchrodingerCat => NBareRed.GetBool(),
                 CustomRoles.PlagueBearer => NKareRed.GetBool(),
                 CustomRoles.Marksman => NKareRed.GetBool(),

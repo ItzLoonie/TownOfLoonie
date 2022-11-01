@@ -153,6 +153,7 @@ namespace TownOfHost
                     case CustomRoles.Pestilence:
                         break;
                     case CustomRoles.Swapper:
+               //     case CustomRoles.NeutPoisoner:
                     case CustomRoles.Jester:
                     case CustomRoles.Executioner:
                     case CustomRoles.Amnesiac:
@@ -323,7 +324,7 @@ namespace TownOfHost
                         return false;
                     }
                 }
-                if (target.Is(CustomRoles.Pestilence) && !killer.Is(CustomRoles.Vampire) && !killer.Is(CustomRoles.Werewolf) && !killer.Is(CustomRoles.TheGlitch))
+                if (target.Is(CustomRoles.Pestilence) && !killer.Is(CustomRoles.Vampire) && !killer.Is(CustomRoles.NeutPoisoner) && !killer.Is(CustomRoles.Werewolf) && !killer.Is(CustomRoles.TheGlitch))
                 {
                     target.RpcMurderPlayer(killer);
                     return false;
@@ -765,6 +766,7 @@ namespace TownOfHost
                         break;
                     case CustomRoles.Poisoner:
                     case CustomRoles.Vampire:
+                    case CustomRoles.NeutPoisoner:
                         if (target.Is(CustomRoles.Veteran) && Main.VetIsAlerted)
                         {
                             target.RpcMurderPlayer(killer);
@@ -797,6 +799,15 @@ namespace TownOfHost
                             {
                                 Utils.CustomSyncAllSettings();
                                 Main.AllPlayerKillCooldown[killer.PlayerId] = Options.DefaultKillCooldown * 2;
+                                killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
+                                killer.RpcGuardAndKill(target);
+                                Main.BitPlayers.Add(target.PlayerId, (killer.PlayerId, 0f));
+                                return false;
+                            }
+                            if (Options.PoisonerBuff.GetBool()) //Poisoner Buff will still make Poisoner report but later.
+                            {
+                                Utils.CustomSyncAllSettings();
+                                Main.AllPlayerKillCooldown[killer.PlayerId] = Options.PoisonCooldown.GetFloat();
                                 killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
                                 killer.RpcGuardAndKill(target);
                                 Main.BitPlayers.Add(target.PlayerId, (killer.PlayerId, 0f));
@@ -938,7 +949,7 @@ namespace TownOfHost
                         killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
                         killer.RpcGuardAndKill(target);
                         return false;
-                    case CustomRoles.NeutralWitch:
+                /*    case CustomRoles.NeutralWitch:
                         if (target.Is(CustomRoles.Veteran) && Main.VetIsAlerted)
                         {
                             target.RpcMurderPlayer(killer);
@@ -957,7 +968,7 @@ namespace TownOfHost
                         Main.AllPlayerKillCooldown[killer.PlayerId] = Options.DefaultKillCooldown * 2;
                         killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
                         killer.RpcGuardAndKill(target);
-                        return false;
+                        return false; */
                     case CustomRoles.TimeThief:
                         if (target.Is(CustomRoles.Veteran) && Main.VetIsAlerted)
                         {
@@ -2193,6 +2204,12 @@ namespace TownOfHost
                                             else
                                                 bitten.RpcMurderPlayer(bitten);
                                         }
+                                        if (Options.PoisonerBuff.GetBool())
+                                        {
+                                            if (bitten.Is(CustomRoles.Survivor)) { Utils.CheckSurvivorVest(bitten, vampirePC); }
+                                            else
+                                                bitten.RpcMurderPlayer(bitten);
+                                        }
                                     }
                                 }
                                 else
@@ -2225,8 +2242,102 @@ namespace TownOfHost
                             Main.BitPlayers[player.PlayerId] =
                             (vampireID, killTimer + Time.fixedDeltaTime);
                         }
+
+                    }
+                    if (GameStates.IsInTask && CustomRoles.NeutPoisoner.IsEnable())
+                    {
+                        if (Main.BitPlayers.ContainsKey(player.PlayerId))
+                        {
+                            //__instance:キルされる予定のプレイヤー
+                            //main.BitPlayers[__instance.PlayerId].Item1:キルしたプレイヤーのID
+                            //main.BitPlayers[__instance.PlayerId].Item2:キルするまでの秒数
+                            byte vampireID = Main.BitPlayers[player.PlayerId].Item1;
+                            float killTimer = Main.BitPlayers[player.PlayerId].Item2;
+                            if (killTimer >= Options.PoisonDelay.GetFloat())
+                            {
+                                var bitten = player;
+                                if (!bitten.Data.IsDead)
+                                {
+                                    PlayerState.SetDeathReason(bitten.PlayerId, PlayerState.DeathReason.Kill);
+                                    var vampirePC = Utils.GetPlayerById(vampireID);
+                                    if (!bitten.Is(CustomRoles.Bait))
+                                    {
+                                        if (vampirePC.IsAlive())
+                                        {
+                                            if (bitten.Is(CustomRoles.Pestilence))
+                                                vampirePC.RpcMurderPlayer(vampirePC);
+                                            else if (bitten.Is(CustomRoles.Survivor))
+                                            {
+                                                foreach (var ar in Main.SurvivorStuff)
+                                                {
+                                                    if (ar.Key != bitten.PlayerId) break;
+                                                    var stuff = Main.SurvivorStuff[bitten.PlayerId];
+                                                    if (stuff.Item2)
+                                                    {
+                                                        //killer.RpcGuardAndKill(killer);
+                                                        vampirePC.RpcGuardAndKill(bitten);
+                                                    }
+                                                    else
+                                                    {
+                                                        bitten.RpcMurderPlayerV2(bitten);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                                bitten.RpcMurderPlayer(bitten);
+                                        }
+                                        //bitten.RpcMurderPlayer(bitten);
+                                        else
+                                        {
+                                            if (Options.VampireBuff.GetBool())
+                                            {
+                                                if (bitten.Is(CustomRoles.Survivor)) { Utils.CheckSurvivorVest(bitten, vampirePC); }
+                                                else
+                                                    bitten.RpcMurderPlayer(bitten);
+                                            }
+                                            if (Options.PoisonerBuff.GetBool())
+                                            {
+                                                if (bitten.Is(CustomRoles.Survivor)) { Utils.CheckSurvivorVest(bitten, vampirePC); }
+                                                else
+                                                    bitten.RpcMurderPlayer(bitten);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        vampirePC.RpcMurderPlayer(bitten);
+                                    }
+
+                                    Logger.Info("Vampireに噛まれている" + bitten?.Data?.PlayerName + "を自爆させました。", "Vampire");
+                                    if (vampirePC.IsAlive())
+                                    {
+                                        RPC.PlaySoundRPC(vampireID, Sounds.KillSound);
+                                        if (bitten.Is(CustomRoles.Trapper))
+                                            vampirePC.TrapperKilled(bitten);
+                                        if (bitten.Is(CustomRoles.Demolitionist))
+                                            Main.KilledDemo.Add(vampireID);
+                                        if (bitten.GetCustomSubRole() == CustomRoles.Bewilder)
+                                            Main.KilledBewilder.Add(vampireID);
+                                        if (bitten.GetCustomSubRole() == CustomRoles.Diseased)
+                                            Main.KilledDiseased.Add(vampireID);
+                                    }
+                                }
+                                else
+                                {
+                                    Logger.Info("Vampireに噛まれている" + bitten?.Data?.PlayerName + "はすでに死んでいました。", "Vampire");
+                                }
+                                Main.BitPlayers.Remove(bitten.PlayerId);
+                            }
+                            else
+                            {
+                                Main.BitPlayers[player.PlayerId] =
+                                (vampireID, killTimer + Time.fixedDeltaTime);
+                            }
+
+                        }
                     }
                 }
+
                 SerialKiller.FixedUpdate(player);
                 if (GameStates.IsInTask && Main.WarlockTimer.ContainsKey(player.PlayerId))//処理を1秒遅らせる
                 {
@@ -2498,7 +2609,7 @@ namespace TownOfHost
             //LocalPlayer専用
             if (__instance.AmOwner)
             {
-                if (GameStates.IsInTask && !GameStates.IsLobby && (__instance.Is(CustomRoles.Sheriff) || __instance.Is(CustomRoles.Investigator) || __instance.Is(CustomRoles.Escort) || __instance.Is(CustomRoles.Crusader) || __instance.Is(CustomRoles.Hitman) || __instance.Is(CustomRoles.Janitor) || __instance.Is(CustomRoles.Painter) || __instance.Is(CustomRoles.Marksman) || __instance.Is(CustomRoles.BloodKnight) || __instance.Is(CustomRoles.Sidekick) || __instance.Is(CustomRoles.CorruptedSheriff) || __instance.GetRoleType() == RoleType.Coven || __instance.Is(CustomRoles.Arsonist) || __instance.Is(CustomRoles.Werewolf) || __instance.Is(CustomRoles.TheGlitch) || __instance.Is(CustomRoles.Juggernaut) || __instance.Is(CustomRoles.PlagueBearer) || __instance.Is(CustomRoles.NeutralWitch) || __instance.Is(CustomRoles.Pestilence) || __instance.Is(CustomRoles.Jackal)) && !__instance.Data.IsDead)
+                if (GameStates.IsInTask &&  !GameStates.IsLobby  && (__instance.Is(CustomRoles.Sheriff) || __instance.Is(CustomRoles.Investigator) || __instance.Is(CustomRoles.NeutPoisoner) || __instance.Is(CustomRoles.Escort) || __instance.Is(CustomRoles.Crusader) || __instance.Is(CustomRoles.Hitman) || __instance.Is(CustomRoles.NeutPoisoner) || __instance.Is(CustomRoles.Janitor) || __instance.Is(CustomRoles.Painter) || __instance.Is(CustomRoles.Marksman) || __instance.Is(CustomRoles.BloodKnight) || __instance.Is(CustomRoles.Sidekick) || __instance.Is(CustomRoles.CorruptedSheriff) || __instance.GetRoleType() == RoleType.Coven || __instance.Is(CustomRoles.Arsonist) || __instance.Is(CustomRoles.Werewolf) || __instance.Is(CustomRoles.TheGlitch) || __instance.Is(CustomRoles.Juggernaut) || __instance.Is(CustomRoles.PlagueBearer) || /* __instance.Is(CustomRoles.NeutralWitch) ||*/ __instance.Is(CustomRoles.Pestilence) || __instance.Is(CustomRoles.Jackal)) && !__instance.Data.IsDead)
                 {
                     var players = __instance.GetPlayersInAbilityRangeSorted(false);
                     PlayerControl closest = players.Count <= 0 ? null : players[0];
@@ -2834,13 +2945,13 @@ namespace TownOfHost
                         Main.WitchedList.ContainsKey(target.PlayerId))
                             Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.CovenWitch)}>◆</color>";
                     }
-                    if (seer.Is(CustomRoles.NeutralWitch))
+                 /*   if (seer.Is(CustomRoles.NeutralWitch))
                     {
                         if (seer.Is(CustomRoles.NeutralWitch) &&
                         Main.NeutralWitchedList.ContainsValue(seer.PlayerId) &&
                         Main.NeutralWitchedList.ContainsKey(target.PlayerId))
                             Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.NeutralWitch)}>◆</color>";
-                    }
+                    } */
                     if (Sniper.IsEnable() && target.AmOwner)
                     {
                         //銃声が聞こえるかチェック
@@ -3691,13 +3802,14 @@ namespace TownOfHost
                 __instance.myPlayer.Is(CustomRoles.Investigator) ||
                 __instance.myPlayer.Is(CustomRoles.Escort) ||
                 __instance.myPlayer.Is(CustomRoles.Crusader) ||
-                __instance.myPlayer.Is(CustomRoles.NeutralWitch) ||
+           //     __instance.myPlayer.Is(CustomRoles.NeutralWitch) ||
                 __instance.myPlayer.Is(CustomRoles.SKMadmate) ||
                 (__instance.myPlayer.Is(CustomRoles.Jester) && !Options.JesterCanVent.GetBool()) ||
                 __instance.myPlayer.Is(CustomRoles.Executioner) ||
                 __instance.myPlayer.Is(CustomRoles.Swapper) ||
                 __instance.myPlayer.Is(CustomRoles.Opportunist) ||
                 __instance.myPlayer.Is(CustomRoles.Amnesiac) ||
+                __instance.myPlayer.Is(CustomRoles.NeutPoisoner) ||
                 __instance.myPlayer.Is(CustomRoles.SKMadmate) ||
                 (__instance.myPlayer.Is(CustomRoles.Arsonist) && !Options.TOuRArso.GetBool()) ||
                 __instance.myPlayer.Is(CustomRoles.PlagueBearer) ||
