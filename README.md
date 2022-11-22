@@ -1,35 +1,29 @@
-# Town Of Host: The Other Roles
+# Town Of Loonie
 
 ## Regarding this mod
 
 This mod is not affiliated with Among Us or Innersloth LLC, Town Of Host, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
 
-I sometimes host this mod myself on Public Lobbies under several names such as **Whited**, **TOH-TOR**, and **TOH GOOD**.
-I constantly update this mod and test it with randoms.
+I sometimes host this mod myself on Public Lobbies.
 
 DISCORD SERVER: https://discord.gg/ha6XBCCHAN --- Recommended after Innersloth introduced randomized lobby names
 
 ## Releases
 
-AmongUs Version: **2022.7.12**<br>
-Semi-Support for: **2022.8.24**, **2022.9.20**<br>
-**Latest Version: [Here](https://github.com/music-discussion/TownOfHost-TheOtherRoles/releases/latest)**
+AmongUs Version: **2022.10.25**<br>
+**Latest Version: [Here](https://github.com/SkullCreeper/TownOfLoonie/releases/latest)**
 
-Old Versions: [Here](https://github.com/music-discussion/TownOfHost-TheOtherRoles/releases)
+Old Versions: [Here](https://github.com/SkullCreeper/TownOfLoonie/releases)
 
 ## KNOWN BUGS
 
 KNOWN BUGS:
 
-- Lovers causes Severe Issues with the Game (fixed in update 0.8.4)
-- Cat does just not work at all.
-- Poisoner doesn't replace a Coven
-- Some Roles have double their Cooldown or half their cooldown sometimes.
 - Black screens on consoles when dead affter next meeting when impostors die. Desynced impostor roles can bypass this until they die. (Lag spikes triggered by name changes cause this)
 - Sometimes players will see some or all players using desynced Impostor roles (known as Impostor Desync)
-- Chat sometimes disappears for the host when a player leaves the game (this prevents commands from working until the host dies. Use SHIFT C ENTER or smth to force chat)
+- Chat sometimes disappears for the host when a player leaves the game (this prevents commands from working until the host dies. Use SHIFT C ENTER to force chat)
 - Some or all roles disappear for ghosts in meetings, this does not apply to players with the mod
-- If GA turns into a SidekickMadmate then the GA target dies, the GA turned SidekickMadmate will still turn into the role set in the settings for GA
+- If GA turns into a Sidekick then the GA target dies, the GA turned Sidekick will still turn into the role set in the settings for GA
 
 ## Features
 
@@ -40,7 +34,7 @@ If you are going to play on Custom Servers, such as MNA and MEU, it would requir
 However, please note that the following restrictions apply.<br>
 
 - If the host changes and does not have this installed, the server isn't modded and is now just a regular Among Us game.<br>
-- If someone will original TOH, joins a TOH: TOR lobby, they may experience graphical issues such as blackscreens.<br>
+- If someone will original TOH or TOH TOR, joins a TOL lobby, they are automatically kicked.<br>
 
 Note that if a player other than the host plays with this mod installed, the following changes will be made.<br>
 
@@ -58,11 +52,11 @@ Note that if a player other than the host plays with this mod installed, the fol
 | ------------------- | ------------------------------ | --------------- |
 | `Shift`+`L`+`Enter` | Terminate the game             | In Game         |
 | `Shift`+`M`+`Enter` | Skip meeting to end            | In Game         |
-| `Shift`+`C`+`Enter` | Force chat to be visible       | In Meeting      |
+| `Shift`+`C`+`Enter` | Force chat to be visible       | In Game         |
 | `Ctrl`+`N`          | Show active role descriptions  | Lobby&In Game   |
 | `C`                 | Cancel game start              | In Countdown    |
 | `Shift`             | Start the game immediately     | In Countdown    |
-| `Ctrl`+`Delete`     | Set default all options        | In TOH Settings |
+| `Ctrl`+`Delete`     | Set default all options        | In TOL Settings |
 | `Ctrl`+`RMB`        | Execute clicked player         | In Meeting      |
 | `RightCtrl`+`RMB`   | Kill clicked player            | In Meeting      |
 
@@ -95,6 +89,7 @@ You can execute chat commands by typing in chat.
 | /help now<br>/help n                                  | Show active setting descriptions                  |
 | /changerole <crewmate, impostor, engineer...>         | Change your In-Game Role                          |
 | /level <0-2147483647>                                 | Change your Among Us level                        |
+| /guessers                                             | Displays what the guessing roles are              |
 
 #### MOD Client Only
 | Command        | Function                    |
@@ -112,6 +107,7 @@ You can execute chat commands by typing in chat.
 | /color<br>/colour           | Change your current color (0-20)        |
 | /name                       | Change your current name                |
 | /myrole                     | Display your current role's description |
+| /howtoguess<br>/htg         | Displays how to use guesser roles       |
 
 ### Template
 This function allows you to send prepared messages.<br>
@@ -127,41 +123,37 @@ For example: `welcome:This room is using the mod Town Of Host: The Other Roles.`
 ### Impostor Disconnect Detection
 If all Impostors leave the game, the game will automatically end with the unused Impostor Disconnected screen. This was done as all impostors leaving the game would black screen all players who do not use desynced Impostor roles after the next meeting.
 
-### Developer Tag
-Developers get a tag while in the lobby to indicate that they're a mod dev.
-Below is an example:
-![Dev tag in use](https://cdn.discordapp.com/attachments/771109338521141298/1021443349821001818/unknown.png)
 
 ## Roles
 
 | Impostors                           | Crewmates                         | Neutrals                          | Neutral Killings                | Coven                          | Modifiers                 |
 | ----------------------------------- | --------------------------------- | --------------------------------- | ------------------------------- | -------------------------------| --------------------------|
-| [BountyHunter](#bountyhunter)       | [Investigator](#investigator)     | [Vulture](#vulture)               | [Arsonist](#arsonist)           | [Coven Leader](#coven-leader)  | [Bait](#bait)             |
+| [Bounty Hunter](#bountyhunter)      | [Investigator](#investigator)     | [Vulture](#vulture)               | [Arsonist](#arsonist)           | [Coven Leader](#coven-leader)  | [Bait](#bait)             |
 | [Camouflager](#camouflager)         | [Dictator](#dictator)             | [Hacker](#hacker)                 | [Egoist](#egoist)               | [Medusa](#medusa)              | [Bewilder](#bewilder)     |
 | [FireWorks](#fireworks)             | [Doctor](#doctor)                 | [Executioner](#executioner)       | [Juggernaut](#juggernaut)       | [Hex Master](#hex-master)      | [Sleuth](#sleuth)         |
-| [Mare](#mare)                       | [Lighter](#lighter)               | [Jester](#jester)                 | [PlagueBearer](#plaguebearer)   | Potion Master                  | [Oblivious](#oblivious)   |
-| [Puppeteer](#puppeteer)             | [Mayor](#mayor)                   | [SchrodingerCat](#schrodingercat) | [The-Glitch](#the-glitch)       | Necromancer                    | [Torch](#torch)           |
+| [Mare](#mare)                       | [Lighter](#lighter)               | [Jester](#jester)                 | [Plaguebearer](#plaguebearer)   | Potion Master                  | [Oblivious](#oblivious)   |
+| [Puppeteer](#puppeteer)             | [Mayor](#mayor)                   | [SchrodingerCat](#schrodingercat) | [The Glitch](#the-glitch)       | Necromancer                    | [Torch](#torch)           |
 | [Mercenary](#mercenary)             | [Mystic](#mystic)                 | [Opportunist](#opportunist)       | [Werewolf](#werewolf)           | Mimic                          | [Flash](#flash)           |
-| [Sniper](#sniper)                   | [SabotageMaster](#sabotagemaster) | [Terrorist](#terrorist)           | [Pestilence](#pestilence)       | Conjuror                       | [Lovers](#lovers)         |
-| [TimeThief](#timethief)             | [Sheriff](#sheriff)               | [Pirate](#guesser)                | [Serial Killer](#serial-killer) |                                | [Watcher](#watcher)       |
-| [Vampire](#vampire)                 | [Snitch](#snitch)                 | [Guardian-Angel](#guardian-angel) | [Marksman](#marksman)           |                                | [Diseased](#diseased)     |
+| [Sniper](#sniper)                   | [Mechanic](#mechanic)             | [Terrorist](#terrorist)           | [Pestilence](#pestilence)       | Conjuror                       | [Lovers](#lovers)         |
+| [Time Thief](#timethief)            | [Sheriff](#sheriff)               | [Pirate](#guesser)                | [Serial Killer](#serial-killer) |                                | [Watcher](#watcher)       |
+| [Vampire](#vampire)                 | [Snitch](#snitch)                 | [Guardian Angel](#guardian-angel) | [Marksman](#marksman)           |                                | [Diseased](#diseased)     |
 | [Warlock](#warlock)                 | [SpeedBooster](#speedbooster)     | [Amnesiac](#amnesiac)             | [Crewpostor](#crewpostor)       |                                |                           |
-| [Witch](#witch)                     | [Trapper](#trapper)               | [Phantom](#phantom)               |                                 |                                |                           |
+| [Witch](#witch)                     | [Trapster](#trapster)             | [Phantom](#phantom)               | [Poisoner](#poisoner)           |                                |                           |
 | [Mafia](#mafia)                     | [Demolitionist](#demolitionist)   | [Swapper](#swapper)               |                                 |                                |                           |
 | [Madmate](#madmate)                 | [Bastion](#bastion)               | [Hitman](#hitman)                 |                                 |                                |                           |
-| [MadGuardian](#madguardian)         | [Vigilante](#guesser)             |                                   |                                 |                                |                           |
-| [MadSnitch](#madsnitch)             | [Veteran](#veteran)               |                                   |                                 |                                |                           |
-| [SidekickMadmate](#sidekickmadmate) | [Child](#child)                   |                                   |                                 |                                |                           |
+| [MadbGuardian](#madguardian)        | [Vigilante](#guesser)             |                                   |                                 |                                |                           |
+| [Mad Snitch](#madsnitch)            | [Veteran](#veteran)               |                                   |                                 |                                |                           |
+| [Sidekick](#sidekick)               | [Child](#child)                   |                                   |                                 |                                |                           |
 | [Silencer](#silencer)               | [Psychic](#psychic)               |                                   |                                 |                                |                           |
 | [Traitor](#traitor)                 |                                   |                                   |                                 |                                |                           |
 | [Assassin](#guesser)                |                                   |                                   |                                 |                                |                           |
 | [Parasite](#parasite)               |                                   |                                   |                                 |                                |                           |
-| [Miner](#miner)                     |                                   |                                   |                                 |                                | 
-| [Grenadier](#grenadier)             |                                   |                                   |                                 |                                |
-| [Ying Yanger](#ying-yanger)         |                                   |                                   |                                 |                                |
-| [Pickpocket](#pickpocket)           |                                   |                                   |                                 |                                |
-| [Cleaner](#cleaner)                 |                                   |                                   |                                 |                                |
-| [Freezer](#freezer)                 |                                   |                                   |                                 |                                |
+| [Miner](#miner)                     |                                   |                                   |                                 |                                |                           |
+| [Grenadier](#grenadier)             |                                   |                                   |                                 |                                |                           |
+| [Ying Yanger](#ying-yanger)         |                                   |                                   |                                 |                                |                           |
+| [Pickpocket](#pickpocket)           |                                   |                                   |                                 |                                |                           |
+| [Janitor](#Janitor)                 |                                   |                                   |                                 |                                |                           |
+| [Freezer](#freezer)                 |                                   |                                   |                                 |                                |                           |
 #### Notes
 
 Roles without a redirect mean they are not implemented yet but are planned.
