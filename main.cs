@@ -5,11 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Configuration;
-using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using UnityEngine;
-using UnhollowerBaseLib;
-using UnhollowerRuntimeLib;
+using Il2CppInterop.Runtime;
 using UnityEngine.SceneManagement;
 using System.Net;
 using System.Net.Sockets;
@@ -24,7 +23,9 @@ namespace TownOfHost
     {
         //Sorry for many Japanese comments.
         public const string PluginGuid = "com.discussions.tohtor";
-        public const string PluginVersion = "0.9.3.1";
+        public const string PluginVersion = "0.9.3.3";
+        public const string DevVersion = "4";
+        public const string FullDevVersion = $" dev {DevVersion}";
         public Harmony Harmony { get; } = new Harmony(PluginGuid);
         public static Version version = Version.Parse(PluginVersion);
         public static BepInEx.Logging.ManualLogSource Logger;
@@ -63,10 +64,9 @@ namespace TownOfHost
         public static Dictionary<byte, PlayerState.DeathReason> AfterMeetingDeathPlayers = new();
         public static Dictionary<CustomRoles, string> roleColors;
         //これ変えたらmod名とかの色が変わる
-        public static string modColor = "#2AA253";
+        public static string modColor = "#4FF918";
         public static bool IsFixedCooldown => CustomRoles.Vampire.IsEnable() && CustomRoles.NeutPoisoner.IsEnable();
-      //  public static bool IsFixedCooldown => CustomRoles.NeutPoisoner.IsEnable();
-        public static float RefixCooldownDelay = 0.01f;
+        public static float RefixCooldownDelay = 0f;
         public static int BeforeFixMeetingCooldown = 10;
         public static List<byte> ResetCamPlayerList;
         public static List<byte> winnerList;
@@ -107,8 +107,8 @@ namespace TownOfHost
         public static Dictionary<byte, byte> ExecutionerTarget = new(); //Key : Executioner, Value : target
         public static Dictionary<byte, byte> GuardianAngelTarget = new(); //Key : GA, Value : target
         public static Dictionary<byte, byte> PuppeteerList = new(); // Key: targetId, Value: PuppeteerId
+        public static Dictionary<byte, byte> WitchList = new(); // Key: targetId, Value: NeutWitchId
         public static Dictionary<byte, byte> WitchedList = new(); // Key: targetId, Value: WitchId
-     //   public static Dictionary<byte, byte> NeutralWitchedList = new(); // Key: targetId, Value: NeutralWitchId
         public static Dictionary<byte, byte> CurrentTarget = new(); //Key : Player, Value : Target
         public static Dictionary<byte, byte> SpeedBoostTarget = new();
         public static Dictionary<byte, int> MayorUsedButtonCount = new();
@@ -137,7 +137,7 @@ namespace TownOfHost
         public static Dictionary<byte, bool> CheckShapeshift = new();
         public static Dictionary<(byte, byte), string> targetArrows = new();
         public static List<PlayerControl> AllCovenPlayers = new();
-        public static Dictionary<PlayerControl, PlayerControl> whoKilledWho = new();
+        public static Dictionary<byte, PlayerControl> whoKilledWho = new();
         public static int WonFFATeam;
         public static byte WonTrollID;
         public static byte ExiledJesterID;
@@ -170,6 +170,7 @@ namespace TownOfHost
         public static Dictionary<byte, (PlayerControl, float)> PlagueBearerTimer = new();
         public static List<int> bombedVents = new();
         public static Dictionary<byte, (byte, bool)> SleuthReported = new();
+        public static Dictionary<AmongUsExtensions.OptionType, List<CustomOption>> Options = new();
 
         public static bool JackalDied;
 
@@ -205,7 +206,6 @@ namespace TownOfHost
         public static int TeamCovenAlive;
         public static bool TeamPestiAlive;
         public static bool TeamJuggernautAlive;
-        public static bool TeamPoisonerAlive;
         public static bool ProtectedThisRound;
         public static bool HasProtected;
         public static int ProtectsSoFar;
@@ -232,9 +232,11 @@ namespace TownOfHost
         public static List<CustomRoles> chosenScientistRoles = new();
         public static List<CustomRoles> chosenShifterRoles = new();
         public static List<byte> rolesRevealedNextMeeting = new();
+        public static Dictionary<byte, bool> CleanerCanClean = new();
 
 
         public static int MarksmanKills = 0;
+        public static bool FirstMeetingOccurded = false;
 
         public static Dictionary<byte, int> lastAmountOfTasks = new(); // PLayerID : Value ---- AMOUNT : KEY
         public static Dictionary<byte, (int, string, string, string, string, string)> AllPlayerSkin = new(); //Key : PlayerId, Value : (1: color, 2: hat, 3: skin, 4:visor, 5: pet)
@@ -261,6 +263,10 @@ namespace TownOfHost
         public static Sprite MinerSprite;
         public static Sprite TargetSprite;
         public static Sprite AssassinateSprite;
+        public static int WitchesThisRound = 0;
+        public static string LastWinner = "None";
+
+        public static AmongUsExtensions.OptionType currentType;
         public override void Load()
         {
             Instance = this;
@@ -299,11 +305,15 @@ namespace TownOfHost
             Impostors = new List<PlayerControl>();
             rolesRevealedNextMeeting = new List<byte>();
             SilencedPlayer = new List<PlayerControl>();
+            LastWinner = "None";
             ColliderPlayers = new List<PlayerControl>();
+            WitchesThisRound = 0;
+            CleanerCanClean = new Dictionary<byte, bool>();
             HasTarget = new Dictionary<byte, bool>();
             isDoused = new Dictionary<(byte, byte), bool>();
             isHexed = new Dictionary<(byte, byte), bool>();
             isInfected = new Dictionary<(byte, byte), bool>();
+            currentType = AmongUsExtensions.OptionType.None;
             ArsonistTimer = new Dictionary<byte, (PlayerControl, float)>();
             PlagueBearerTimer = new Dictionary<byte, (PlayerControl, float)>();
             ExecutionerTarget = new Dictionary<byte, byte>();
@@ -314,6 +324,7 @@ namespace TownOfHost
             knownGhosts = new Dictionary<byte, List<byte>>();
             LastEnteredVentLocation = new Dictionary<byte, Vector2>();
             CurrentTarget = new Dictionary<byte, byte>();
+            WitchList = new Dictionary<byte, byte>();
             HasModifier = new Dictionary<byte, CustomRoles>();
             // /DeadPlayersThisRound = new List<byte>();
             LoversPlayers = new List<PlayerControl>();
@@ -350,6 +361,7 @@ namespace TownOfHost
             VampireDitchesOn = false;
             MedusaOn = false;
             MimicOn = false;
+            FirstMeetingOccurded = false;
             NecromancerOn = false;
             ConjurorOn = false;
             ChoseWitch = false;
@@ -373,7 +385,7 @@ namespace TownOfHost
             LastVotedPlayer = "";
             bkProtected = false;
             AlertSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Alert.png", 100f);
-            DouseSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Doused.png", 100f);
+            DouseSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Douse.png", 100f);
             HackSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Hack.png", 100f);
             IgniteSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Ignite.png", 100f);
             InfectSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Infect.png", 100f);
@@ -390,7 +402,7 @@ namespace TownOfHost
             FlashSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Flash.png", 100f);
             PoisonedSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Poisoned.png", 100f);
             BlackmailSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Blackmail.png", 100f);
-            MediumSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Meditate.png", 100f);
+            MediumSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Mediate.png", 100f);
             MinerSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.Mine.png", 100f);
             TargetSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.NinjaMarkButton.png", 100f);
             AssassinateSprite = Helpers.LoadSpriteFromResourcesTOR("TownOfHost.Resources.NinjaAssassinateButton.png", 100f);
@@ -425,16 +437,20 @@ namespace TownOfHost
                 roleColors = new Dictionary<CustomRoles, string>()
                 {
                     //バニラ役職
-                    { CustomRoles.Crewmate, "#ffffff"},
-                //    { CustomRoles.GM, "#8F8F8F" },
-                    { CustomRoles.Engineer, "#b6f0ff"},
+                    {CustomRoles.Crewmate, "#ffffff"},
+                    {CustomRoles.Engineer, "#b6f0ff"},
                     { CustomRoles.Scientist, "#b6f0ff"},
-                    { CustomRoles.GuardianAngel, "#b6f0ff"},
-                    { CustomRoles.Target, "#000000"},
-                    { CustomRoles.CorruptedSheriff, "#ff1313"},
+                    { CustomRoles.Mechanic, "#FFA60A"},
+                    { CustomRoles.Physicist, "#b6f0ff"},
+                    { CustomRoles.GuardianAngel, "#ffffff"},
+                    {CustomRoles.Target, "#000000"},
+                    { CustomRoles.CorruptedSheriff, "#ff0000"},
                     { CustomRoles.Watcher, "#800080"},
                     { CustomRoles.NiceGuesser, "#E4E085"},
                     { CustomRoles.Pirate, "#EDC240"},
+                    // Engineer and Shapeshifter Remake
+                    { CustomRoles.EngineerRemake, "#b6f0ff"},
+                    { CustomRoles.ShapeshifterRemake, "#ff1313"},
                     //特殊クルー役職
                     { CustomRoles.Bait, "#00B3B3"},
                     { CustomRoles.SabotageMaster, "#0000ff"},
@@ -466,15 +482,14 @@ namespace TownOfHost
                     { CustomRoles.Medium, "#A680FF"},
                     { CustomRoles.Alturist, "#660000"},
                     { CustomRoles.Psychic, "#6F698C"},
-                    { CustomRoles.EngineerRemake, "#b6f0ff"},
-                 //   { CustomRoles.ScientistRemake, "#b6f0ff"},
                     //第三陣営役職
                     { CustomRoles.Arsonist, "#ff6633"},
                     { CustomRoles.Jester, "#ec62a5"},
                     { CustomRoles.Terrorist, "#ED7679"},
-                    { CustomRoles.Executioner, "#b5b5b5"},
+                    { CustomRoles.Executioner, "#bababa"},
                     { CustomRoles.Opportunist, "#84ABFF"},
                     { CustomRoles.Survivor, "#FFE64D"},
+                    { CustomRoles.PoisonMaster, "#ed2f91"},
                     { CustomRoles.SchrodingerCat, "#696969"},
                     { CustomRoles.Egoist, "#5600ff"},
                     { CustomRoles.EgoSchrodingerCat, "#5600ff"},
@@ -484,8 +499,8 @@ namespace TownOfHost
                     { CustomRoles.Juggernaut, "#670038"},
                     { CustomRoles.JSchrodingerCat, "#00b4eb"},
                     { CustomRoles.Phantom, "#662962"},
+                    { CustomRoles.NeutWitch, "#592e98"},
                     { CustomRoles.Hitman, "#ce1924"},
-				//	{ CustomRoles.NeutralWitch, "#23542f"},
                     //HideAndSeek
                     { CustomRoles.HASFox, "#e478ff"},
                     { CustomRoles.BloodKnight, "#630000"},
@@ -505,10 +520,11 @@ namespace TownOfHost
                     { CustomRoles.Diseased, "#AAAAAA"},
                     { CustomRoles.TieBreaker, "#99E699"},
                     { CustomRoles.Obvious, "#D3D3D3"},
+                    { CustomRoles.Escalation, "#FFB34D"},
 
-                    { CustomRoles.Coven, "#592e98"},
+                    { CustomRoles.Coven, "#bd5dfd"},
                     { CustomRoles.Veteran, "#998040"},
-                    { CustomRoles.GuardianAngelTOU, "#67f0e0"},
+                    { CustomRoles.GuardianAngelTOU, "#B3FFFF"},
                     { CustomRoles.TheGlitch, "#00FF00"},
                     { CustomRoles.Werewolf, "#A86629"},
                     { CustomRoles.Amnesiac, "#81DDFC"},
@@ -519,6 +535,7 @@ namespace TownOfHost
                     { CustomRoles.CrewPostor, "#DC6601"},
                     { CustomRoles.NeutPoisoner, "#E91E63"},
 
+                    // TAGS //
                     //TEXT COLORS ROSIE
                     { CustomRoles.sns1, "#FFF9DB"},
                     { CustomRoles.sns2, "#FCECE0"},
@@ -529,7 +546,12 @@ namespace TownOfHost
                     { CustomRoles.sns7, "#EA7BF7"},
                     { CustomRoles.sns8, "#E763F9"},
                     { CustomRoles.rosecolor, "#FFD6EC"},
+                    // MISC //
                     { CustomRoles.eevee, "#FF8D1C"},
+                    {CustomRoles.serverbooster, "#f47fff"},
+                    { CustomRoles.thetaa, "#9A9AEB"},
+                    // SELF//
+                    { CustomRoles.minaa, "#C8A2C8"},
                     { CustomRoles.allie, "#FFFF00"},
                     { CustomRoles.theta, "#9A9AEB"},
                     { CustomRoles.nooby, "#72CE62"},
@@ -549,7 +571,57 @@ namespace TownOfHost
                     { CustomRoles.ess, "#B8189A" },
                     { CustomRoles.thic, "#ff0094"},
                     { CustomRoles.vent, "#a500ff" },
-                    { CustomRoles.felicia, "#ff1694" }
+                    { CustomRoles.felicia, "#ff1694" },
+                    // EV COLORS
+                    { CustomRoles.ev0, "#ED53B9"},
+                    { CustomRoles.ev1, "#EC69C3"},
+                    { CustomRoles.ev2, "#EB7FCC"},
+                    { CustomRoles.ev3, "#EA95D6"},
+                    { CustomRoles.ev4, "#E9A4DD"},
+                    { CustomRoles.ev5, "#E8B3E3"},
+                    { CustomRoles.ev6, "#E8C1EA"},
+                    { CustomRoles.ev7, "#E7D0F0"},
+                    { CustomRoles.ev8, "#E6E6FA"},
+                    // ESS COLORS
+                    { CustomRoles.ess1, "#B8189A"},
+                    { CustomRoles.ess2, "#C032A9"},
+                    { CustomRoles.ess3, "#CA54BC"},
+                    { CustomRoles.ess4, "#D16ECA"},
+                    { CustomRoles.ess5, "#D888D9"},
+                    { CustomRoles.ess6, "#E2AAEC"},
+                    { CustomRoles.ess7, "#EAC4FB"},
+                    // FELICIA COLORS
+                    { CustomRoles.thief1, "#FF1694"},
+                    { CustomRoles.thief2, "#FE2A9B"},
+                    { CustomRoles.thief3, "#FD379F"},
+                    { CustomRoles.thief4, "#FF1694"},
+                    { CustomRoles.thief5, "#FC4BA6"},
+                    { CustomRoles.thief6, "#FB5FAC"},
+                    { CustomRoles.thief7, "#F980B7"},
+                    { CustomRoles.thief8, "#F979B5"},
+                    { CustomRoles.thief9, "#F88DBC"},
+                    { CustomRoles.thief10, "#F79AC0"},
+
+
+                    //TEXT COLORS Candy
+                    { CustomRoles.psh1, "#EF807F"},
+                    { CustomRoles.psh2, "#F3969C"},
+                    { CustomRoles.psh3, "#F7ABB8"},
+                    { CustomRoles.psh4, "#FBC1D5"},
+                    { CustomRoles.psh5, "#FBC6E9"},
+                    { CustomRoles.psh6, "#F6B6E0"},
+                    { CustomRoles.psh7, "#F4AEDC"},
+                    { CustomRoles.psh8, "#F1A6D7"},
+                    { CustomRoles.psh9, "#EC96CE"},
+
+                    // TSC COLORS
+                    { CustomRoles.tsc1, "#6abe30"},
+                    { CustomRoles.tsc2, "#5ab129"},
+                    { CustomRoles.tsc3, "#459f1f"},
+                    { CustomRoles.tsc4, "#359218"},
+                    { CustomRoles.tsc5, "#20800e"},
+                    { CustomRoles.tsc6, "#107307"},
+                    { CustomRoles.tsc7, "#006600"},
                 };
                 foreach (var role in Enum.GetValues(typeof(CustomRoles)).Cast<CustomRoles>())
                 {
@@ -562,7 +634,7 @@ namespace TownOfHost
                             roleColors.TryAdd(role, "#ff1313");
                             break;
                         case RoleType.Coven:
-                            roleColors.TryAdd(role, "#592e98");
+                            roleColors.TryAdd(role, "#bd5dfd");
                             break;
                         default:
                             break;
@@ -598,7 +670,7 @@ namespace TownOfHost
                     TownOfHost.Logger.Error(ex.ToString(), "Template");
                 }
             }
-            if (!File.Exists("percentage.txt"))
+            /*if (!File.Exists("percentage.txt"))
             {
                 TownOfHost.Logger.Info("Could not find percentage.txt in the same folder as Among Us.exe. This will cause roles to not spawn at all. Please redownload the mod.", "Percentage");
                 try
@@ -609,31 +681,22 @@ namespace TownOfHost
                 {
                     TownOfHost.Logger.Error(ex.ToString(), "Percentage");
                 }
-            }
+            }*/
 
             Harmony.PatchAll();
         }
         private delegate bool DLoadImage(IntPtr tex, IntPtr data, bool markNonReadable);
-
-
-        [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.Initialize))]
-        class TranslationControllerInitializePatch
-        {
-            public static void Postfix(TranslationController __instance)
-            {
-                var english = __instance.Languages.Where(lang => lang.languageID == SupportedLangs.English).FirstOrDefault();
-                EnglishLang = new LanguageUnit(english);
-            }
-        }
     }
     public enum CustomRoles
     {
         //Default
         Crewmate = 0,
-    //    GM,
         //Impostor(Vanilla)
         Impostor,
         Shapeshifter,
+        Morphling,
+        Mechanic,
+        Physicist,
         Target,
         //Impostor
         BountyHunter,
@@ -649,6 +712,7 @@ namespace TownOfHost
         Warlock,
         Mare,
         Miner,
+        Consort,
         YingYanger,
         Grenadier,
         Disperser,
@@ -704,8 +768,6 @@ namespace TownOfHost
         Child,
         Veteran,
         CSchrodingerCat,
-        EngineerRemake,
-    //    ScientistRemake,
         //Neutral
         Arsonist,
         Egoist,
@@ -713,13 +775,16 @@ namespace TownOfHost
         Pestilence,
         Vulture,
         TheGlitch,
+        Postman,
         Werewolf,
+        NeutWitch,
         Marksman,
         GuardianAngelTOU,
         EgoSchrodingerCat,
         Jester,
         Amnesiac,
         Hacker,
+        PoisonMaster,
         BloodKnight,
         Hitman,
         Phantom,
@@ -732,9 +797,8 @@ namespace TownOfHost
         Executioner,
         Jackal,
         Sidekick,
-        JSchrodingerCat,
         NeutPoisoner,
-	//	NeutralWitch,
+        JSchrodingerCat,
         //HideAndSeek
         HASFox,
         HASTroll,
@@ -764,6 +828,7 @@ namespace TownOfHost
         Lovers,
         LoversRecode,
         Flash, // DONE
+        Escalation,
         TieBreaker, // DONE
         Oblivious, // DONE
         Sleuth, // DONE
@@ -776,7 +841,7 @@ namespace TownOfHost
         Torch, // DONE
         Diseased,
 
-        //CUSTOM COLORS ROSIE
+        // TAG COLORS //
         sns1,
         sns2,
         sns3,
@@ -786,7 +851,22 @@ namespace TownOfHost
         sns7,
         sns8,
         rosecolor,
+        // random //
+        thetaa,
         eevee,
+        serverbooster,
+        // SELF //
+        minaa,
+        // end random //
+        psh1,
+        psh2,
+        psh3,
+        psh4,
+        psh5,
+        psh6,
+        psh7,
+        psh8,
+        psh9,
         allie,
         theta,
         nooby,
@@ -806,7 +886,41 @@ namespace TownOfHost
         ess,
         thic,
         vent,
-        felicia
+        felicia,
+        EngineerRemake,
+        ev0,
+        ev1,
+        ev2,
+        ev3,
+        ev4,
+        ev5,
+        ev6,
+        ev7,
+        ev8,
+        ess1,
+        ess2,
+        ess3,
+        ess4,
+        ess5,
+        ess6,
+        ess7,
+        thief1,
+        thief2,
+        thief3,
+        thief4,
+        thief5,
+        thief6,
+        thief7,
+        thief8,
+        thief9,
+        thief10,
+        tsc1,
+        tsc2,
+        tsc3,
+        tsc4,
+        tsc5,
+        tsc6,
+        tsc7
     }
     //WinData
     public enum CustomWinner
@@ -838,7 +952,7 @@ namespace TownOfHost
         Pirate = CustomRoles.Pirate,
         Marksman = CustomRoles.Marksman,
         Painter = CustomRoles.Painter,
-        NeutPoisoner = CustomRoles.NeutPoisoner
+        NeutPoisoner = CustomRoles.NeutPoisoner,
     }
     public enum AdditionalWinners
     {
@@ -850,7 +964,7 @@ namespace TownOfHost
         HASFox = CustomRoles.HASFox,
         GuardianAngelTOU = CustomRoles.GuardianAngelTOU,
         Hitman = CustomRoles.Hitman,
-     //   NeutralWitch = CustomRoles.NeutralWitch,
+        Witch = CustomRoles.NeutWitch
     }
     /*public enum CustomRoles : byte
     {
@@ -862,13 +976,16 @@ namespace TownOfHost
     {
         None = 0,
         TOH,
-        LONNIE,
-        Theta,
-        Allie,
-        Ben,
+        Streaming,
+        Recording,
         Dev,
-        thicvent,
-        Essence
+        Host,
+        EssName,
+        ShiftyName,
+        LoonieName,
+        EssTag,
+        ShiftyTag,
+        LoonieTag
     }
     public enum VersionTypes
     {

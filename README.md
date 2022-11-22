@@ -1,20 +1,21 @@
-# Town Of Loonie
+# Town Of Host: The Other Roles
 
 ## Regarding this mod
 
 This mod is not affiliated with Among Us or Innersloth LLC, Town Of Host, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
 
-I sometimes host this mod myself on Public Lobbies.
+I sometimes host this mod myself on Public Lobbies under several names such as **Whited**, **TOH-TOR**, and **TOH GOOD**.
+I constantly update this mod and test it with randoms.
 
 DISCORD SERVER: https://discord.gg/ha6XBCCHAN --- Recommended after Innersloth introduced randomized lobby names
 
 ## Releases
 
 AmongUs Version: **2022.7.12**<br>
-Semi-Support for: **2022.8.24**, **2022.9.20**, **2022.10.18**<br>
-**Latest Version: [Here](https://github.com/SkullCreeper/TownOfLoonie/releases/latest)**
+Semi-Support for: **2022.8.24**, **2022.9.20**<br>
+**Latest Version: [Here](https://github.com/music-discussion/TownOfHost-TheOtherRoles/releases/latest)**
 
-Old Versions: [Here](https://github.com/SkullCreeper/TownOfLoonie/releases)
+Old Versions: [Here](https://github.com/music-discussion/TownOfHost-TheOtherRoles/releases)
 
 ## KNOWN BUGS
 
@@ -39,7 +40,7 @@ If you are going to play on Custom Servers, such as MNA and MEU, it would requir
 However, please note that the following restrictions apply.<br>
 
 - If the host changes and does not have this installed, the server isn't modded and is now just a regular Among Us game.<br>
-- If someone will original TOH or TOH TOR, joins a TOL lobby, they will be automatically kicked.<br>
+- If someone will original TOH, joins a TOH: TOR lobby, they may experience graphical issues such as blackscreens.<br>
 
 Note that if a player other than the host plays with this mod installed, the following changes will be made.<br>
 
@@ -57,7 +58,7 @@ Note that if a player other than the host plays with this mod installed, the fol
 | ------------------- | ------------------------------ | --------------- |
 | `Shift`+`L`+`Enter` | Terminate the game             | In Game         |
 | `Shift`+`M`+`Enter` | Skip meeting to end            | In Game         |
-| `Shift`+`C`+`Enter` | Force chat to be visible       | In Game         |
+| `Shift`+`C`+`Enter` | Force chat to be visible       | In Meeting      |
 | `Ctrl`+`N`          | Show active role descriptions  | Lobby&In Game   |
 | `C`                 | Cancel game start              | In Countdown    |
 | `Shift`             | Start the game immediately     | In Countdown    |
@@ -141,11 +142,11 @@ Below is an example:
 | [Mare](#mare)                       | [Lighter](#lighter)               | [Jester](#jester)                 | [PlagueBearer](#plaguebearer)   | Potion Master                  | [Oblivious](#oblivious)   |
 | [Puppeteer](#puppeteer)             | [Mayor](#mayor)                   | [SchrodingerCat](#schrodingercat) | [The-Glitch](#the-glitch)       | Necromancer                    | [Torch](#torch)           |
 | [Mercenary](#mercenary)             | [Mystic](#mystic)                 | [Opportunist](#opportunist)       | [Werewolf](#werewolf)           | Mimic                          | [Flash](#flash)           |
-| [Sniper](#sniper)                   | [Mechanic](#mechanic)             | [Terrorist](#terrorist)           | [Pestilence](#pestilence)       | Conjuror                       | [Lovers](#lovers)         |
+| [Sniper](#sniper)                   | [SabotageMaster](#sabotagemaster) | [Terrorist](#terrorist)           | [Pestilence](#pestilence)       | Conjuror                       | [Lovers](#lovers)         |
 | [TimeThief](#timethief)             | [Sheriff](#sheriff)               | [Pirate](#guesser)                | [Serial Killer](#serial-killer) |                                | [Watcher](#watcher)       |
 | [Vampire](#vampire)                 | [Snitch](#snitch)                 | [Guardian-Angel](#guardian-angel) | [Marksman](#marksman)           |                                | [Diseased](#diseased)     |
 | [Warlock](#warlock)                 | [SpeedBooster](#speedbooster)     | [Amnesiac](#amnesiac)             | [Crewpostor](#crewpostor)       |                                |                           |
-| [Witch](#witch)                     | [Trapper](#trapper)               | [Phantom](#phantom)               | [Poisoner](#poisoner)           |                                |                           |
+| [Witch](#witch)                     | [Trapper](#trapper)               | [Phantom](#phantom)               |                                 |                                |                           |
 | [Mafia](#mafia)                     | [Demolitionist](#demolitionist)   | [Swapper](#swapper)               |                                 |                                |                           |
 | [Madmate](#madmate)                 | [Bastion](#bastion)               | [Hitman](#hitman)                 |                                 |                                |                           |
 | [MadGuardian](#madguardian)         | [Vigilante](#guesser)             |                                   |                                 |                                |                           |
@@ -366,7 +367,8 @@ Team : Impostors<br>
 Basis : Impostor<br>
 
 The Silencer's first kill attempt will silence the crewmate inside the next meeting.<br>
-After the Silence, the Silencer is a regular Impostor.<br>
+After the Silence, the Silencer is a regular Impostor until the next meeting.<br>
+After the next meeting, the process restarts and they can silence again.<br>
   
 ### Traitor
 
@@ -588,29 +590,28 @@ Depending on the options, they can call emergency meeting by entering vents.<br>
 | Mayor Has Mobile Emergency Button |
 | Number Of Mobile Emergency Button |
 
-### Mechanic
+### SabotageMaster
 
 Create and idea by 空き瓶/EmptyBottle<br>
 
 Team : Crewmates<br>
-Basis : Engineer<br>
+Basis : Crewmate<br>
 
-The Mechanic can fix sabotages faster.<br>
-They can fix both of Comms in MIRA HQ, Reactor and O2 by fixing either.<br>
+The SabotageMasters can fix sabotage faster.<br>
+they can fix both of Comms in MIRA HQ, Reactor and O2 by fixing either.<br>
 Lights can be fixed by touching a single lever.<br>
 Opening a door in Polus or The Airship will open all the linked doors.<br>
-They can also vent like an Engineer.<br>
 
 #### Game Options
 
-| Name                                             |
-| ------------------------------------------------ |
-| Mechanic Fix Ability Limit(Except Opening Doors) |
-| Mechanic Can Open Multiple Doors                 |
-| Mechanic Can Fix Both Reactors                   |
-| Mechanic Can Fix Both O2                         |
-| Mechanic Can Fix Both Comms In MIRA HQ           |
-| Mechanic Can Fix Lights Out All At Once          |
+| Name                                                   |
+| ------------------------------------------------------ |
+| SabotageMaster Fix Ability Limit(Except Opening Doors) |
+| SabotageMaster Can Open Multiple Doors                 |
+| SabotageMaster Can Fix Both Reactors                   |
+| SabotageMaster Can Fix Both O2                         |
+| SabotageMaster Can Fix Both Comms In MIRA HQ           |
+| SabotageMaster Can Fix Lights Out All At Once          |
 
 ### Sheriff
 
@@ -635,7 +636,7 @@ Killing Crewmates will result in suicide. <br>
 | Sheriff Can Kill Madmates                                         |
 | Sheriff Can Kill [Egoist](#egoist)                                |
 | Sheriff Can Kill [SchrodingerCat](#schrodingercat) In Team Egoist |
-| Sheriff Misfire Kills Crewmate                                    |
+| Sheriff Can Kill Crewmates As It                                  |
 | Sheriff Shot Limit                                                |
 
 ### Snitch
@@ -670,7 +671,7 @@ Finishing all the tasks boosts the player speed of someone alive.<br>
 
 | Name                 |
 | -------------------- |
-| Boosted Player Speed |
+| Boosted Player Speed |J
 
 ### Trapper
 
@@ -1159,15 +1160,6 @@ The Hitman is a neutral benign role with the ability to kill.<br>
 Hitman can win with anyone and does not count as a killer.<br>
 Optionally, Hitman can also win with roles like Jester and Executioner.<br>
 
-### Poisoner
-
-Team : Neutral<br>
-Basis : Impostor<br>
-Victory Conditions : Kill everyone with poison<br>
-
-The Poisoner is a neutral killer with delayed kills rather than direct.<br>
-They win alone and must kill everyone to win.<br>
-
 ## Coven
 
 ### Coven Leader
@@ -1523,10 +1515,11 @@ Roles from:
 5. [au.libhalt.net](https://au.libhalt.net)<br>
 6. [Foolers Mod](https://github.com/MengTube/Foolers-Mod)<br>
 7. [Town-Of-Us-R](https://github.com/eDonnes124/Town-Of-Us-R)<br>
-8. Mek, Discussion's friend on Discord (Bewilder, Bastion, Demolitionist)<br>
+8. Mek, My friend on Discord (Bewilder, Bastion, Demolitionist)<br>
 9. Original [Town Of Host](https://github.com/tukasa0001/TownOfHost) (Mod itself plus pull requests for roles such as the guesser roles)
-10. [TOH TOR](https://github.com/music-discussion/TownOfHost-TheOtherRoles)
 
 ## Developers
-- Discussions - Main mod
-- TheSkullCreeper - Extra features and art direction
+- [Discussions](https://github.com/music-discussion) ([YouTube](https://www.youtube.com/channel/UCAawAIWR5XfJE6T0JdYpzzg)) - Coding
+- [MC-AS-Huier](https://github.com/MC-AS-Huier) - SChinese Translations
+- [Tommy-XL](https://github.com/Tommy-XL) - Rus Translations
+- TheSkullCreeper#0001 - Art Direction
