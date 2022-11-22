@@ -348,7 +348,7 @@ The players spelled by Witches before a meeting are marked "cross" in the meetin
 ### Mafia
 
 Team : Impostors<br>
-Basis : Impostor<br>
+Basis : Shapeshifter<br>
 
 The Mafias can initially use vents and sabotage, but cannot kill (still have a button).<br>
 They will be able to kill after Impostors except them are all gone.<br>
@@ -400,12 +400,12 @@ Basis : Impostor<br>
 The Pickpocket is an Impostor who steals the votes of players they kill.<br>
 These votes stack up, which can make the Pickpocket very powerful.<br>
 
-### Cleaner
+### Janitor
 
 Team : Impostors<br>
 Basis : Impostor<br>
 
-The Cleaner is an Impostor who can use their report button to clean bodies, making them unreportable.<br>
+The Janitor is an Impostor who can use their report button to clean bodies, making them unreportable.<br>
 Players with the mod will not see the cleaned body.<br>
 
 ### Freezer
@@ -482,18 +482,18 @@ Parasites can shapeshift, kill, and vent.<br>
 Due to limitations, whether Parasite knows the Impostors varies.<br>
 The intended design was that they didn't know.<br>
 
-### SidekickMadmate
+### Sidekick
 
 Create and idea by たんぽぽ<br>
 
 Team : Impostors<br>
 Basis : Undecided<br>
 
-The SidekickMadmate is an acquired Madmate Role assigned by Impostors in task phases.<br>
-Some kind of Shapeshifter-based Impostors can give SidekickMadmate by Shapeshifting next to a target.<br>
+The Sidekick is an acquired Madmate Role assigned by Impostors in task phases.<br>
+Some kind of Shapeshifter-based Impostors can give Sidekick by Shapeshifting next to a target.<br>
 
 **NOTE:**
-- The **"nearest"** Crewmate becomes SidekickMadmate no matter to whom the Impostors Shapeshift.
+- The **"nearest"** Crewmate becomes Sidekick no matter to whom the Impostors Shapeshift.
 
 
 ## Impostor/Crewmate
@@ -582,28 +582,19 @@ Depending on the options, they can call emergency meeting by entering vents.<br>
 | Mayor Has Mobile Emergency Button |
 | Number Of Mobile Emergency Button |
 
-### SabotageMaster
+### Mechanic
 
 Create and idea by 空き瓶/EmptyBottle<br>
 
 Team : Crewmates<br>
-Basis : Crewmate<br>
+Basis : Engineer<br>
 
-The SabotageMasters can fix sabotage faster.<br>
+The Mechanic can fix sabotages faster.<br>
 they can fix both of Comms in MIRA HQ, Reactor and O2 by fixing either.<br>
 Lights can be fixed by touching a single lever.<br>
 Opening a door in Polus or The Airship will open all the linked doors.<br>
+The Mechanic can also vent.<br>
 
-#### Game Options
-
-| Name                                                   |
-| ------------------------------------------------------ |
-| SabotageMaster Fix Ability Limit(Except Opening Doors) |
-| SabotageMaster Can Open Multiple Doors                 |
-| SabotageMaster Can Fix Both Reactors                   |
-| SabotageMaster Can Fix Both O2                         |
-| SabotageMaster Can Fix Both Comms In MIRA HQ           |
-| SabotageMaster Can Fix Lights Out All At Once          |
 
 ### Sheriff
 
@@ -665,7 +656,7 @@ Finishing all the tasks boosts the player speed of someone alive.<br>
 | -------------------- |
 | Boosted Player Speed |J
 
-### Trapper
+### Trapser
 
 Created by そうくん<br>
 Original idea by 宿主ランニング<br>
@@ -673,7 +664,7 @@ Original idea by 宿主ランニング<br>
 Team : Crewmates<br>
 Basis : Crewmate<br>
 
-When killed, the trapper will hold the killer in place.<br>
+When killed, the trapser will hold the killer in place.<br>
 The time held in place on the body is decided by host in settings.<br>
 
 #### Game Options
