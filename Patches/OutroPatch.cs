@@ -36,6 +36,7 @@ namespace TownOfHost
             }
             if (TempData.DidImpostorsWin(endGameResult.GameOverReason))
             {
+                int deathAmount = 0;
                 if (Main.currentWinner == CustomWinner.Default)
                     Main.currentWinner = CustomWinner.Impostor;
                 foreach (var p in PlayerControl.AllPlayerControls)
@@ -43,8 +44,9 @@ namespace TownOfHost
                     //if (p.GetCustomSubRole() == CustomRoles.LoversRecode) continue;
                     bool canWin = p.Is(RoleType.Impostor) || p.Is(RoleType.Madmate) || p.Is(CustomRoles.CrewPostor) || p.Is(CustomRoles.CorruptedSheriff);
                     if (canWin) winner.Add(p);
+                    if (p.Data.IsDead | PlayerState.isDead[p.PlayerId]) deathAmount++;
                 }
-                Egoist.OverrideCustomWinner();
+                Egoist.OverrideCustomWinner(deathAmount);
             }
             if (Options.CurrentGameMode() != CustomGameMode.HideAndSeek)
             {
@@ -79,14 +81,6 @@ namespace TownOfHost
                     if (p.Is(CustomRoles.Werewolf)) winner.Add(p);
                 }
             }
-            if (Main.currentWinner == CustomWinner.NeutPoisoner)
-            {
-                winner.Clear();
-                foreach (var p in PlayerControl.AllPlayerControls)
-                {
-                    if (p.Is(CustomRoles.NeutPoisoner)) winner.Add(p);
-                }
-            }
             if (Main.currentWinner == CustomWinner.Marksman)
             {
                 winner.Clear();
@@ -111,6 +105,15 @@ namespace TownOfHost
                     if (p.Is(CustomRoles.TheGlitch)) winner.Add(p);
                 }
             }
+            if (Main.currentWinner == CustomWinner.NeutPoisoner)
+            {
+                winner.Clear();
+                foreach (var p in PlayerControl.AllPlayerControls)
+                {
+                    if (p.Is(CustomRoles.NeutPoisoner)) winner.Add(p);
+                }
+            }
+
             if (Main.currentWinner == CustomWinner.Vulture)
             {
                 winner.Clear();
@@ -267,7 +270,8 @@ namespace TownOfHost
                     }
                 }
             }
-            TeamEgoist.SoloWin(winner);
+            if (TeamEgoist.EgoistWin)
+                TeamEgoist.SoloWin(winner);
             ///以降追加勝利陣営 (winnerリセット無し)
             //Opportunist
             var winnerIDs = new List<byte>();
@@ -279,12 +283,6 @@ namespace TownOfHost
                     winner.Add(pc);
                     Main.additionalwinners.Add(AdditionalWinners.Opportunist);
                 }
-                // Neutral Witch
-              /*  if (pc.Is(CustomRoles.NeutralWitch) && !pc.Data.IsDead && Main.currentWinner != CustomWinner.Draw && Main.currentWinner != CustomWinner.Terrorist && Main.currentWinner != CustomWinner.Child && Main.currentWinner != CustomWinner.Jester && Main.currentWinner != CustomWinner.Executioner && Main.currentWinner != CustomWinner.Swapper)
-                {
-                    winner.Add(pc);
-                    Main.additionalwinners.Add(AdditionalWinners.NeutralWitch);
-                } */
                 //SchrodingerCat
                 if (Options.CanBeforeSchrodingerCatWinTheCrewmate.GetBool())
                     if (pc.Is(CustomRoles.SchrodingerCat) && Main.currentWinner == CustomWinner.Crewmate)
@@ -301,6 +299,10 @@ namespace TownOfHost
                             Main.additionalwinners.Add(AdditionalWinners.Executioner);
                         }
                     }
+                if (pc.Is(CustomRoles.NeutWitch) && Main.currentWinner != CustomWinner.Crewmate)
+                {
+
+                }
             }
 
             foreach (var p in winner)
@@ -388,6 +390,12 @@ namespace TownOfHost
             Main.BitPlayers = new Dictionary<byte, (byte, float)>();
             Main.isDoused = new Dictionary<(byte, byte), bool>();
             Main.SilencedPlayer.Clear();
+            Main.ColliderPlayers.Clear();
+            Main.KilledDemo.Clear();
+            Main.PuppeteerList.Clear();
+            Main.WitchList.Clear();
+            Main.DeadPlayersThisRound.Clear();
+            Main.WitchedList.Clear();
             Main.SilencedPlayer = new List<PlayerControl>();
 
             NameColorManager.Instance.RpcReset();
@@ -465,6 +473,7 @@ namespace TownOfHost
             {
                 textRenderer.text = $"<color={CustomWinnerColor}>{CustomWinnerText}{AdditionalWinnerText}{GetString("Win")}</color>";
             }
+            Main.LastWinner = textRenderer.text.RemoveHtmlTags();
             LastWinsText = textRenderer.text.RemoveHtmlTags();
 
             var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
@@ -494,7 +503,11 @@ namespace TownOfHost
                     var deathReasonFound = PlayerState.deathReasons.TryGetValue(key.Key, out var deathReason);
                     string more = "";
                     if (deathReasonFound)
-                        more = deathReason.ToString();
+                        if (deathReason != PlayerState.DeathReason.etc)
+                        {
+                            more = "Death Reason: ";
+                            more += deathReason.ToString();
+                        }
                     roleSummaryText += $"\nError getting some of this player's info. {more}";
                 }
             }

@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
-using UnhollowerBaseLib;
+using Il2CppInterop;
 using UnityEngine;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using static TownOfHost.Translator;
 
 namespace TownOfHost
@@ -28,16 +29,14 @@ namespace TownOfHost
             //壁抜け
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
-                if ((AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started || GameStates.IsFreePlay)
-                    && player.MyAnim.ClipName is "Idle" or "Walk")
-                {
-                    player.Collider.offset = new Vector2(0f, 127f);
-                }
+
+                player.Collider.offset = new Vector2(0f, 127f);
+
             }
             //壁抜け解除
             if (player.Collider.offset.y == 127f)
             {
-                if (!Input.GetKey(KeyCode.LeftControl) || AmongUsClient.Instance.IsGameStarted)
+                if (!Input.GetKey(KeyCode.LeftControl))
                 {
                     player.Collider.offset = new Vector2(0f, -0.3636f);
                 }
@@ -47,6 +46,8 @@ namespace TownOfHost
             {
                 case CustomRoles.TheGlitch:
                     __instance.AbilityButton.OverrideText("MIMIC");
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    __instance.ImpostorVentButton.OverrideText($"SWAP");
                     if (Main.IsHackMode)
                         __instance.KillButton.OverrideText("HACK");
                     else
@@ -93,6 +94,10 @@ namespace TownOfHost
                     break;
                 case CustomRoles.Crusader:
                     __instance.KillButton.OverrideText("CRUSADE");
+                    break;
+                case CustomRoles.NeutWitch:
+                    __instance.KillButton.OverrideText("WITCH");
+                    __instance.ReportButton.OverrideText($"REPORT");
                     break;
                 case CustomRoles.Sniper:
                     __instance.AbilityButton.OverrideText(Sniper.OverrideShapeText(player.PlayerId));
@@ -164,13 +169,12 @@ namespace TownOfHost
                     break;
                 case CustomRoles.Arsonist:
                     __instance.KillButton.OverrideText($"{GetString("ArsonistDouseButtonText")}");
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    __instance.ImpostorVentButton.OverrideText($"IGNITE");
                     break;
                 case CustomRoles.Puppeteer:
                     __instance.KillButton.OverrideText($"{GetString("PuppeteerOperateButtonText")}");
                     break;
-            /*    case CustomRoles.NeutralWitch:
-                    __instance.KillButton.OverrideText($"{GetString("PuppeteerOperateButtonText")}");
-                    break; */
                 case CustomRoles.YingYanger:
                     if (Main.DoingYingYang)
                         __instance.KillButton.OverrideText($"{GetString("PuppeteerOperateButtonText")}");
@@ -179,11 +183,14 @@ namespace TownOfHost
                     break;
                 case CustomRoles.PlagueBearer:
                     __instance.KillButton.OverrideText($"{GetString("InfectButtonText")}");
+                    __instance.ReportButton.OverrideText($"REPORT");
                     break;
                 case CustomRoles.Pestilence:
                     __instance.KillButton.OverrideText($"{GetString("KillButtonText")}");
+                    __instance.ReportButton.OverrideText($"REPORT");
                     break;
                 case CustomRoles.Poisoner:
+                case CustomRoles.PoisonMaster:
                     __instance.KillButton.OverrideText($"{GetString("PoisonButtonText")}");
                     break;
                 case CustomRoles.BountyHunter:
@@ -191,15 +198,14 @@ namespace TownOfHost
                     break;
                 case CustomRoles.Veteran:
                     __instance.AbilityButton.OverrideText($"ALERT");
+                    var color = Utils.GetRoleColor(PlayerControl.LocalPlayer.GetCustomRole());
+                    __instance.AbilityButton.buttonLabelText.color = color;
                     break;
                 case CustomRoles.Bastion:
                     __instance.AbilityButton.OverrideText($"BOMB");
                     break;
-                case CustomRoles.NeutPoisoner:
-                    __instance.KillButton.OverrideText($"POISON");
-                    break;
                 case CustomRoles.Medium:
-                    __instance.AbilityButton.OverrideText($"MEDITATE");
+                    __instance.AbilityButton.OverrideText($"MEDIATE");
                     break;
                 case CustomRoles.Mayor:
                     __instance.AbilityButton.OverrideText($"BUTTON");
@@ -216,6 +222,49 @@ namespace TownOfHost
                 case CustomRoles.Amnesiac:
                     __instance.ReportButton.OverrideText($"REMEMBER");
                     break;
+                case CustomRoles.NeutPoisoner:
+                    __instance.KillButton.OverrideText($"POISON");
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    break;
+                case CustomRoles.Sheriff:
+                    __instance.KillButton.OverrideText($"SHOOT");
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    break;
+                case CustomRoles.CorruptedSheriff:
+                    __instance.KillButton.OverrideText($"KILL");
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    break;
+                case CustomRoles.GuardianAngel:
+                    __instance.AbilityButton.OverrideText($"PROTECT");
+                    break;
+                case CustomRoles.Opportunist:
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    break;
+                case CustomRoles.Jackal:
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    break;
+                case CustomRoles.Juggernaut:
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    break;
+                case CustomRoles.Egoist:
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    break;
+                case CustomRoles.BloodKnight:
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    break;
+                case CustomRoles.Marksman:
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    break;
+                case CustomRoles.Werewolf:
+                    __instance.ReportButton.OverrideText($"REPORT");
+                    break;
+                case CustomRoles.Oblivious:
+                    __instance.ReportButton.OverrideText($"DISABLED");
+                    break;
+                case CustomRoles.Medusa:
+                    __instance.ImpostorVentButton.OverrideText($"STONE GAZE");
+                    break;
+
             }
 
             __instance.GameSettings.text = OptionShower.GetText();
@@ -288,6 +337,12 @@ namespace TownOfHost
                 LowerInfoText.text += "\nCan Swoop: " + ReadyLang;
                 LowerInfoText.enabled = true;
             }
+            else if (player.Is(CustomRoles.Cleaner))
+            {
+                var ModeLang = Main.CleanerCanClean[player.PlayerId] ? "Yes" : "No";
+                LowerInfoText.text = "Cleaner Can Clean: " + ModeLang;
+                LowerInfoText.enabled = true;
+            }
             else
             {
                 LowerInfoText.enabled = false;
@@ -299,13 +354,13 @@ namespace TownOfHost
 
             if (!player.GetCustomRole().IsVanilla())
             {
-                TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), $"Role: {player.GetRoleName()}\r\n");
+                TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), GetString("Roles") + $": {player.GetRoleName()}\r\n");
                 if (player.Is(CustomRoles.Mafia))
                     TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), GetString(player.CanUseKillButton() ? "AfterMafiaInfo" : "BeforeMafiaInfo"));
                 else
                 {
                     if (player.Is(CustomRoles.Pirate))
-                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), $"Successfully plunder {Guesser.PirateGuessAmount.GetInt()} players.");
+                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), $"Type: Killing\n\nUse '/shoot show' to receive a list of role IDs and player IDs.\nUse '/shoot playerID roleID' to guess.\nRole IDs change every meeting.\nGuessing wrong removes your ability to guess for the rest of the meeting.\n\nWin Condition: Successfully plunder {Guesser.PirateGuessAmount.GetInt()} players.");
                     else if (player.Is(CustomRoles.Executioner) | player.Is(CustomRoles.Swapper))
                     {
                         byte target = 0x6;
@@ -314,10 +369,10 @@ namespace TownOfHost
                             if (playere.Key == player.PlayerId)
                                 target = playere.Value;
                         }
-                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), $"Vote {Utils.GetPlayerById(target).GetRealName(isMeeting: true)} Out");
+                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), $"Type: Evil\n\nGet your assigned target voted off to win!\n\nWin Condition: Eject {Utils.GetPlayerById(target).GetRealName(isMeeting: true)}!");
                     }
                     else
-                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), GetString(player.GetCustomRole() + "Info"));
+                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), GetString(player.GetCustomRole() + "InfoTask"));
                 }
                 TaskTextPrefix += "</color>\r\n";
             }
@@ -326,28 +381,28 @@ namespace TownOfHost
                 switch (player.GetCustomRole())
                 {
                     case CustomRoles.Crewmate:
-                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), $"Role: {player.GetRoleName()}\r\n");
-                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), "Do your tasks and get the impostors out.");
+                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), GetString("Roles") + $": {player.GetRoleName()}\r\n");
+                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), GetString("CrewmateInfoTask"));
                         break;
                     case CustomRoles.Engineer:
-                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), $"Role: {player.GetRoleName()}\r\n");
-                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), "Use the Vents to Catch Killers in the Act");
+                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), GetString("Roles") + $": {player.GetRoleName()}\r\n");
+                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), GetString("Engineerinfo"));
                         break;
                     case CustomRoles.Scientist:
-                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), $"Role: {player.GetRoleName()}\r\n");
-                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), "Use Vitals to Catch Self Reports");
+                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), GetString("Roles") + $": {player.GetRoleName()}\r\n");
+                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), GetString("Scientistinfo"));
                         break;
                     case CustomRoles.Impostor:
-                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), $"Role: {player.GetRoleName()}\r\n");
-                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), "Sabotage and leave none standing.");
+                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), GetString("Roles") + $": {player.GetRoleName()}\r\n");
+                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), GetString("ImpostorInfoTask"));
                         break;
                     case CustomRoles.Shapeshifter:
-                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), $"Role: {player.GetRoleName()}\r\n");
-                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), "Shift to confuse the crew of who's who.");
+                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), GetString("Roles") + $": {player.GetRoleName()}\r\n");
+                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), GetString("Shapeshifterinfo"));
                         break;
                     case CustomRoles.GuardianAngel:
-                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), $"Role: {player.GetRoleName()}\r\n");
-                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), "Protect your fellow remaining crew.");
+                        TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), GetString("Roles") + $": {player.GetRoleName()}\r\n");
+                        TaskTextPrefix += Helpers.ColorString(player.GetRoleColor(), GetString("GuardianAngelInfoTask"));
                         break;
                 }
                 TaskTextPrefix += "</color>\r\n";
@@ -363,7 +418,7 @@ namespace TownOfHost
                 }*/
                 TaskTextPrefix += Helpers.ColorString(Utils.GetRoleColor(player.GetCustomSubRole()), $"Modifier: {player.GetSubRoleName()}\r\n");
                 if (player.GetCustomSubRole() != CustomRoles.LoversRecode)
-                    TaskTextPrefix += Helpers.ColorString(Utils.GetRoleColor(player.GetCustomSubRole()), $"{GetString(player.GetSubRoleName() + "Info")}\r\n");
+                    TaskTextPrefix += Helpers.ColorString(Utils.GetRoleColor(player.GetCustomSubRole()), $"{GetString(player.GetSubRoleName() + "InfoTask")}\r\n");
                 else
                 {
                     string name = "";
@@ -372,7 +427,7 @@ namespace TownOfHost
                         if (lp.PlayerId == player.PlayerId) continue;
                         name = lp.GetRealName(true);
                     }
-                    TaskTextPrefix += Helpers.ColorString(Utils.GetRoleColor(player.GetCustomSubRole()), $"You are in love with {name}.\r\n");
+                    TaskTextPrefix += Helpers.ColorString(Utils.GetRoleColor(player.GetCustomSubRole()), $"Type: Neutral\n\nYou are in love with {name}.\nSurvive with them to win together!\n\nWin Condition: Be among us the final three.\r\n");
                 }
             }
             if (!Utils.HasTasks(player.Data, false) && !player.GetCustomRole().IsImpostor())
@@ -443,10 +498,6 @@ namespace TownOfHost
                 case CustomRoles.BloodKnight:
                     player.CanUseImpostorVent();
                     goto DesyncImpostor;
-                case CustomRoles.NeutPoisoner:
-                 //   player.CanUseImpostorVent();
-                  //  player.CanUseKillButton();
-                    goto DesyncImpostor;
                 case CustomRoles.Werewolf:
                     // TaskTextPrefix += FakeTasksText;
                     player.CanUseImpostorVent();
@@ -455,10 +506,12 @@ namespace TownOfHost
                     //TaskTextPrefix += FakeTasksText;
                     player.CanUseImpostorVent();
                     goto DesyncImpostor;
+                case CustomRoles.NeutPoisoner:
+                    player.CanUseImpostorVent();
+                    //  player.CanUseKillButton();
+                    goto DesyncImpostor;
+
                 case CustomRoles.Marksman:
-            /*    case CustomRoles.NeutralWitch:
-                    player.CanUseKillButton();
-                    break; */
                 case CustomRoles.Sidekick:
                 case CustomRoles.Jackal:
                     //   TaskTextPrefix += FakeTasksText;
@@ -562,8 +615,8 @@ namespace TownOfHost
                 player.GetCustomRole() == CustomRoles.Werewolf ||
                 player.GetCustomRole() == CustomRoles.Painter ||
                 player.GetCustomRole() == CustomRoles.Janitor ||
-                player.GetCustomRole() == CustomRoles.Juggernaut ||
                 player.GetCustomRole() == CustomRoles.NeutPoisoner ||
+                player.GetCustomRole() == CustomRoles.Juggernaut ||
                 player.GetCustomRole() == CustomRoles.Marksman ||
                 player.GetCustomRole() == CustomRoles.BloodKnight ||
                 player.GetCustomRole() == CustomRoles.PlagueBearer ||
@@ -596,6 +649,8 @@ namespace TownOfHost
             switch (player.GetCustomRole())
             {
                 case CustomRoles.Sheriff:
+                case CustomRoles.PoisonMaster:
+                case CustomRoles.NeutWitch:
                 case CustomRoles.Investigator:
                 case CustomRoles.Arsonist:
                     if (player.Data.Role.Role != RoleTypes.GuardianAngel)
@@ -627,13 +682,6 @@ namespace TownOfHost
                     __instance.ImpostorVentButton.ToggleVisible(isActive);
                     __instance.AbilityButton.ToggleVisible(false);
                     break;
-           /*     case CustomRoles.NeutralWitch:
-                    if (player.Data.Role.Role != RoleTypes.GuardianAngel)
-                        __instance.KillButton.ToggleVisible(isActive && !player.Data.IsDead);
-                    __instance.SabotageButton.ToggleVisible(false);
-                    __instance.ImpostorVentButton.ToggleVisible(false);
-                    __instance.AbilityButton.ToggleVisible(false); 
-                    break; */
                 case CustomRoles.PlagueBearer:
                     if (player.Data.Role.Role != RoleTypes.GuardianAngel)
                         __instance.KillButton.ToggleVisible(isActive && !player.Data.IsDead);
@@ -648,6 +696,14 @@ namespace TownOfHost
                     __instance.ImpostorVentButton.ToggleVisible(true);
                     //__instance.AbilityButton.ToggleVisible(true);
                     break;
+                case CustomRoles.NeutPoisoner:
+                    if (player.Data.Role.Role != RoleTypes.GuardianAngel)
+                        __instance.KillButton.ToggleVisible(isActive && !player.Data.IsDead);
+                    __instance.SabotageButton.ToggleVisible(false);
+                    __instance.ImpostorVentButton.ToggleVisible(isActive && !player.Data.IsDead);
+                    __instance.AbilityButton.ToggleVisible(false);
+                    break;
+
                 case CustomRoles.Werewolf:
                     if (player.Data.Role.Role != RoleTypes.GuardianAngel)
                         __instance.KillButton.ToggleVisible(isActive && !player.Data.IsDead);
@@ -667,13 +723,6 @@ namespace TownOfHost
                         __instance.KillButton.ToggleVisible(isActive && !player.Data.IsDead);
                     __instance.SabotageButton.ToggleVisible(false);
                     __instance.ImpostorVentButton.ToggleVisible(Options.JuggerCanVent.GetBool());
-                    __instance.AbilityButton.ToggleVisible(false);
-                    break;
-                case CustomRoles.NeutPoisoner:
-                    if (player.Data.Role.Role != RoleTypes.GuardianAngel)
-                        __instance.KillButton.ToggleVisible(isActive && !player.Data.IsDead);
-                    __instance.SabotageButton.ToggleVisible(false);
-                    __instance.ImpostorVentButton.ToggleVisible(false);
                     __instance.AbilityButton.ToggleVisible(false);
                     break;
                 case CustomRoles.BloodKnight:
@@ -796,7 +845,7 @@ namespace TownOfHost
         public static void Prefix(ref RoleTeamTypes __state)
         {
             var player = PlayerControl.LocalPlayer;
-            if (player.Is(CustomRoles.Sheriff) || player.Is(CustomRoles.BloodKnight) || player.Is(CustomRoles.NeutPoisoner) || player.Is(CustomRoles.Escort) || player.Is(CustomRoles.Crusader) || player.Is(CustomRoles.Investigator) || player.Is(CustomRoles.Parasite) || player.Is(CustomRoles.Arsonist) || player.Is(CustomRoles.PlagueBearer) || player.Is(CustomRoles.TheGlitch) || player.Is(CustomRoles.Werewolf) || player.Is(CustomRoles.Opportunist) || player.Is(CustomRoles.Executioner) || player.Is(CustomRoles.Swapper) || player.Is(CustomRoles.Jester) || player.Is(CustomRoles.Pestilence))
+            if (player.Is(CustomRoles.Sheriff) || player.Is(CustomRoles.NeutPoisoner) || player.Is(CustomRoles.BloodKnight) || player.Is(CustomRoles.Escort) || player.Is(CustomRoles.Crusader) || player.Is(CustomRoles.Investigator) || player.Is(CustomRoles.Parasite) || player.Is(CustomRoles.Arsonist) || player.Is(CustomRoles.PlagueBearer) || player.Is(CustomRoles.TheGlitch) || player.Is(CustomRoles.Werewolf) || player.Is(CustomRoles.Opportunist) || player.Is(CustomRoles.Executioner) || player.Is(CustomRoles.Swapper) || player.Is(CustomRoles.Jester) || player.Is(CustomRoles.Pestilence))
             {
                 __state = player.Data.Role.TeamType;
                 player.Data.Role.TeamType = RoleTeamTypes.Crewmate;
@@ -811,7 +860,7 @@ namespace TownOfHost
         public static void Postfix(ref RoleTeamTypes __state)
         {
             var player = PlayerControl.LocalPlayer;
-            if (player.Is(CustomRoles.Sheriff) || player.Is(CustomRoles.BloodKnight) || player.Is(CustomRoles.NeutPoisoner) || player.Is(CustomRoles.Escort) || player.Is(CustomRoles.Crusader) || player.Is(CustomRoles.Investigator) || player.Is(CustomRoles.Parasite) || player.Is(CustomRoles.Arsonist) || player.Is(CustomRoles.PlagueBearer) || player.Is(CustomRoles.TheGlitch) || player.Is(CustomRoles.Werewolf) || player.Is(CustomRoles.Pestilence))
+            if (player.Is(CustomRoles.Sheriff) || player.Is(CustomRoles.NeutPoisoner) || player.Is(CustomRoles.BloodKnight) || player.Is(CustomRoles.Escort) || player.Is(CustomRoles.Crusader) || player.Is(CustomRoles.Investigator) || player.Is(CustomRoles.Parasite) || player.Is(CustomRoles.Arsonist) || player.Is(CustomRoles.PlagueBearer) || player.Is(CustomRoles.TheGlitch) || player.Is(CustomRoles.Werewolf) || player.Is(CustomRoles.Pestilence))
             {
                 player.Data.Role.TeamType = __state;
             }

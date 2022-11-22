@@ -9,7 +9,6 @@ namespace TownOfHost
         public static bool Prefix(ref float __result, Console __instance, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
         {
             canUse = couldUse = false;
-            //こいつをfalseでreturnしても、タスク(サボ含む)以外の使用可能な物は使えるまま(ボタンなど)
             return __instance.AllowImpostor || Utils.HasTasks(PlayerControl.LocalPlayer.Data, false);
         }
     }
@@ -24,6 +23,8 @@ namespace TownOfHost
     [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
     class CanUseVentPatch
     {
+        public static object NeutPoisoner { get; private set; }
+
         public static bool Prefix(Vent __instance, [HarmonyArgument(0)] GameData.PlayerInfo pc,
             [HarmonyArgument(1)] ref bool canUse,
             [HarmonyArgument(2)] ref bool couldUse,
@@ -42,7 +43,7 @@ namespace TownOfHost
             var usableDistance = __instance.UsableDistance;
 
             if (pc.IsDead) return false; //死んでる人は強制的にfalseに。
-            else if (pc.Object.Is(CustomRoles.Sheriff) || pc.Object.Is(CustomRoles.PlagueBearer) || pc.Object.Is(CustomRoles.Amnesiac) || pc.Object.Is(CustomRoles.Escort) || pc.Object.Is(CustomRoles.Crusader) || pc.Object.Is(CustomRoles.Janitor) || pc.Object.Is(CustomRoles.Investigator) || (pc.Object.Is(CustomRoles.Arsonist) && !pc.Object.IsDouseDone() && !Options.TOuRArso.GetBool()))
+            else if (pc.Object.Is(CustomRoles.Sheriff) || pc.Object.Is(CustomRoles.PlagueBearer) || pc.Object.Is(CustomRoles.PoisonMaster) || pc.Object.Is(CustomRoles.Amnesiac) || pc.Object.Is(CustomRoles.Escort) || pc.Object.Is(CustomRoles.Crusader) || pc.Object.Is(CustomRoles.Janitor) || pc.Object.Is(CustomRoles.Investigator) || (pc.Object.Is(CustomRoles.Arsonist) && !pc.Object.IsDouseDone() && !Options.TOuRArso.GetBool()))
                 return false;
             else if (pc.Object.Is(CustomRoles.Arsonist) && pc.Object.IsDouseDone() && !Options.TOuRArso.GetBool())
                 canUse = couldUse = VentForTrigger = true;
@@ -62,6 +63,8 @@ namespace TownOfHost
                 canUse = couldUse = Options.MarksmanCanVent.GetBool();
             else if (pc.Object.Is(CustomRoles.Camouflager))
                 canUse = couldUse = Camouflager.CanVent();
+            else if (pc.Object.Is(CustomRoles.NeutPoisoner))
+                canUse = couldUse = true;
             else if (pc.Object.Is(CustomRoles.Hitman))
                 canUse = couldUse = Options.HitmanCanVent.GetBool();
             else if (pc.Object.Is(CustomRoles.BloodKnight))
@@ -78,8 +81,6 @@ namespace TownOfHost
                 canUse = couldUse = true;
             else if (pc.Object.Is(CustomRoles.Necromancer))
                 canUse = couldUse = Necromancer.CanUseVent();
-           /* else if (pc.Object.Is(CustomRoles.NeutPoisoner))
-                canUse = couldUse = Necromancer.CanUseVent(); */
             else if (pc.Object.Is(CustomRoles.CovenWitch) && Main.HasNecronomicon)
                 canUse = couldUse = true;
             else if (pc.Object.Is(CustomRoles.HexMaster) && Main.HasNecronomicon)

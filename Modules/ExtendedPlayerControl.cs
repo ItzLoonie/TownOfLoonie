@@ -407,7 +407,7 @@ namespace TownOfHost
                 case CustomRoles.Sheriff:
                 case CustomRoles.Investigator:
                 case CustomRoles.Janitor:
-                case CustomRoles.Arsonist:
+
                 case CustomRoles.Amnesiac:
                 case CustomRoles.Crusader:
                 case CustomRoles.Escort:
@@ -440,10 +440,6 @@ namespace TownOfHost
                     opt.RoleOptions.ScientistCooldown = 0f;
                     opt.RoleOptions.ScientistBatteryCharge = Options.DoctorTaskCompletedBatteryCharge.GetFloat();
                     break;
-                case CustomRoles.SabotageMaster:
-                    opt.RoleOptions.EngineerCooldown = 0;
-                    opt.RoleOptions.EngineerInVentMaxTime = 0;
-                    break;
                 case CustomRoles.Camouflager:
                     opt.RoleOptions.ShapeshifterCooldown = Camouflager.CamouflagerCamouflageCoolDown.GetFloat();
                     opt.RoleOptions.ShapeshifterDuration = Camouflager.CamouflagerCamouflageDuration.GetFloat();
@@ -453,6 +449,11 @@ namespace TownOfHost
                     if (Options.JuggerCanVent.GetBool())
                         goto InfinityVent;
                     break;
+                case CustomRoles.NeutPoisoner:
+                    opt.SetVision(player, true);
+                    //  if (Options.JuggerCanVent.GetBool())
+                    goto InfinityVent;
+                //  break;
                 case CustomRoles.Freezer:
                     opt.RoleOptions.ShapeshifterCooldown = Options.FreezerCooldown.GetFloat();
                     opt.RoleOptions.ShapeshifterDuration = Options.FreezerDuration.GetFloat();
@@ -549,6 +550,9 @@ namespace TownOfHost
                 case CustomRoles.Hitman:
                     opt.SetVision(player, Options.HitmanHasImpVision.GetBool());
                     break;
+                case CustomRoles.Arsonist:
+                    opt.SetVision(player, Options.ArsoImpVision.GetBool());
+                    break;
                 case CustomRoles.Werewolf:
                     if (!Main.IsRampaged)
                         opt.SetVision(player, false);
@@ -573,8 +577,10 @@ namespace TownOfHost
                     opt.RoleOptions.ShapeshifterDuration = Options.ShapeshifterDuration.GetFloat();
                     opt.RoleOptions.ShapeshifterLeaveSkin = Options.ShapeshifterSkin.GetBool();
                     break;
-             //   case CustomRoles.NeutralWitch:
-               
+                case CustomRoles.SabotageMaster:
+                    opt.RoleOptions.EngineerCooldown = 0;
+                    opt.RoleOptions.EngineerInVentMaxTime = 0;
+                    break;
 
 
                 InfinityVent:
@@ -591,6 +597,15 @@ namespace TownOfHost
                     break;
                 case CustomRoles.Flash:
                     Main.AllPlayerSpeed[player.PlayerId] = Options.FlashSpeed.GetFloat();
+                    break;
+                case CustomRoles.Escalation:
+                    Main.AllPlayerSpeed[player.PlayerId] = Main.RealOptionsData.PlayerSpeedMod;
+                    int deadAmount = PlayerState.GetDeadPeopleAmount();
+                    if (deadAmount != 0)
+                    {
+                        Main.AllPlayerSpeed[player.PlayerId] *= deadAmount * 0.25f + 1f;
+                        Logger.Info($"{player.GetNameWithRole()} has gotten faster! Their speed is now {Main.AllPlayerSpeed[player.PlayerId]}.", "Escalation Speed Update");
+                    }
                     break;
                 case CustomRoles.Bewilder:
                     if (player.Is(CustomRoles.Lighter))
@@ -615,16 +630,35 @@ namespace TownOfHost
                 foreach (var kc in Main.AllPlayerKillCooldown)
                 {
                     if (kc.Key == player.PlayerId)
-                        opt.KillCooldown = kc.Value > 0 ? kc.Value : 0.01f;
+                        opt.KillCooldown = kc.Value > 0 ? kc.Value : 0.1f;
                 }
             }
+
+            switch (player.GetCustomRole())
+            {
+                case CustomRoles.NeutWitch:
+                    opt.KillCooldown = Options.ControlCooldown.GetFloat();
+                    break;
+                case CustomRoles.Hitman:
+                    // Main.AllPlayerKillCooldown[player.PlayerId] = Options.HitmanKillCooldown.GetFloat();
+                    break;
+                case CustomRoles.Escort:
+                    opt.KillCooldown = Options.EscortCooldown.GetFloat() + Options.GlobalRoleBlockDuration.GetFloat();
+                    break;
+                case CustomRoles.Crusader:
+                    opt.KillCooldown = Options.CrusadeCooldown.GetFloat();
+                    break;
+            }
+
+            if (Main.KilledDiseased.Contains(player.PlayerId))
+                opt.KillCooldown *= Options.DiseasedMultiplier.GetFloat();
 
             if (Main.AllPlayerSpeed.ContainsKey(player.PlayerId))
             {
                 foreach (var speed in Main.AllPlayerSpeed)
                 {
                     if (speed.Key == player.PlayerId)
-                        opt.PlayerSpeedMod = Mathf.Clamp(speed.Value, 0.0001f, 3f);
+                        opt.PlayerSpeedMod = Mathf.Clamp(speed.Value, 0.0001f, 5f);
                 }
             }
             if (Options.GhostCanSeeOtherVotes.GetBool() && player.Data.IsDead && opt.AnonymousVotes)
@@ -859,11 +893,10 @@ namespace TownOfHost
                 CustomRoles.Werewolf => true,
                 CustomRoles.TheGlitch => true,
                 CustomRoles.Medusa => true,
-           //     CustomRoles.NeutralWitch => true,
-                CustomRoles.NeutPoisoner => true,
                 CustomRoles.Coven => true,
                 CustomRoles.Painter => true,
                 CustomRoles.Janitor => true,
+                CustomRoles.NeutPoisoner => true,
                 CustomRoles.CovenWitch => true,
                 CustomRoles.PotionMaster => true,
                 CustomRoles.HexMaster => true,
@@ -963,33 +996,33 @@ namespace TownOfHost
             var SchrodingerTeam = RandSchrodinger[rand.Next(RandSchrodinger.Count)];
             player.RpcSetCustomRole(SchrodingerTeam);
         }
-        public static void ResetKillCooldown(this PlayerControl player)
+        public static void ResetKillCooldown(this PlayerControl player, bool meeting = false)
         {
-            //if (!player.Is(CustomRoles.Juggernaut))
-            Main.AllPlayerKillCooldown[player.PlayerId] = Options.DefaultKillCooldown; //キルクールをデフォルトキルクールに変更
+            Main.AllPlayerKillCooldown[player.PlayerId] = Options.DefaultKillCooldown;
             switch (player.GetCustomRole())
             {
                 case CustomRoles.Marksman:
                     Main.AllPlayerKillCooldown[player.PlayerId] = Options.MarksmanKillCooldown.GetFloat();
                     break;
+                case CustomRoles.NeutWitch:
+                    Main.AllPlayerKillCooldown[player.PlayerId] = Options.ControlCooldown.GetFloat();
+                    break;
                 case CustomRoles.Hitman:
-                    Main.AllPlayerKillCooldown[player.PlayerId] = Options.HitmanKillCooldown.GetFloat();
+                    // Main.AllPlayerKillCooldown[player.PlayerId] = Options.HitmanKillCooldown.GetFloat();
                     break;
                 case CustomRoles.Juggernaut:
                     float DecreasedAmount = Main.JugKillAmounts * Options.JuggerDecrease.GetFloat();
                     Main.AllPlayerKillCooldown[player.PlayerId] = Options.JuggerKillCooldown.GetFloat() - DecreasedAmount;
-                    // if (Main.AllPlayerKillCooldown[player.PlayerId] < 0)
-                    //     Main.AllPlayerKillCooldown[player.PlayerId] = 0;
                     break;
                 case CustomRoles.Escort:
-                    Main.AllPlayerKillCooldown[player.PlayerId] = Options.EscortCooldown.GetFloat();
+                    Main.AllPlayerKillCooldown[player.PlayerId] = Options.EscortCooldown.GetFloat() + Options.GlobalRoleBlockDuration.GetFloat();
                     break;
                 case CustomRoles.Crusader:
                     Main.AllPlayerKillCooldown[player.PlayerId] = Options.CrusadeCooldown.GetFloat();
                     break;
                 case CustomRoles.TheGlitch:
                     if (Main.IsHackMode)
-                        Main.AllPlayerKillCooldown[player.PlayerId] = Options.GlitchRoleBlockCooldown.GetFloat();
+                        Main.AllPlayerKillCooldown[player.PlayerId] = Options.GlitchRoleBlockCooldown.GetFloat() + Options.GlobalRoleBlockDuration.GetFloat();
                     else
                         Main.AllPlayerKillCooldown[player.PlayerId] = Options.GlitchKillCooldown.GetFloat();
                     break;
@@ -998,10 +1031,10 @@ namespace TownOfHost
                         Main.AllPlayerKillCooldown[player.PlayerId] = Options.YinYangCooldown.GetFloat();
                     break;
                 case CustomRoles.SerialKiller:
-                    SerialKiller.ApplyKillCooldown(player.PlayerId); //シリアルキラーはシリアルキラーのキルクールに。
+                    SerialKiller.ApplyKillCooldown(player.PlayerId);
                     break;
                 case CustomRoles.TimeThief:
-                    TimeThief.SetKillCooldown(player.PlayerId); //タイムシーフはタイムシーフのキルクールに。
+                    TimeThief.SetKillCooldown(player.PlayerId);
                     break;
                 case CustomRoles.Mare:
                     Mare.SetKillCooldown(player.PlayerId);
@@ -1061,17 +1094,121 @@ namespace TownOfHost
                 case CustomRoles.Painter:
                     Main.AllPlayerKillCooldown[player.PlayerId] = Options.STCD.GetFloat() * 2;
                     break;
-             /*   case CustomRoles.NeutralWitch:
-                    Main.AllPlayerKillCooldown[player.PlayerId] = Options.ControlCooldown.GetFloat();
-                    break; */
                 case CustomRoles.NeutPoisoner:
                     Main.AllPlayerKillCooldown[player.PlayerId] = Options.PoisonCooldown.GetFloat();
                     break;
             }
             if (player.IsLastImpostor())
                 Main.AllPlayerKillCooldown[player.PlayerId] = Options.LastImpostorKillCooldown.GetFloat();
+            if (player.GetCustomRole() is CustomRoles.Vampire or CustomRoles.PlagueBearer or CustomRoles.Arsonist && meeting)
+                Main.AllPlayerKillCooldown[player.PlayerId] /= 2;
+        }
+        public static float GetKillCooldown(this PlayerControl player)
+        {
+            float KillCooldown = Options.DefaultKillCooldown;
+            switch (player.GetCustomRole())
+            {
+                case CustomRoles.Marksman:
+                    KillCooldown = Options.MarksmanKillCooldown.GetFloat();
+                    break;
+                case CustomRoles.NeutWitch:
+                    KillCooldown = Options.ControlCooldown.GetFloat();
+                    break;
+                case CustomRoles.Hitman:
+                    // KillCooldown = Options.HitmanKillCooldown.GetFloat();
+                    break;
+                case CustomRoles.Juggernaut:
+                    float DecreasedAmount = Main.JugKillAmounts * Options.JuggerDecrease.GetFloat();
+                    KillCooldown = Options.JuggerKillCooldown.GetFloat() - DecreasedAmount;
+                    break;
+                case CustomRoles.Escort:
+                    KillCooldown = Options.EscortCooldown.GetFloat() + Options.GlobalRoleBlockDuration.GetFloat();
+                    break;
+                case CustomRoles.Crusader:
+                    KillCooldown = Options.CrusadeCooldown.GetFloat();
+                    break;
+                case CustomRoles.TheGlitch:
+                    if (Main.IsHackMode)
+                        KillCooldown = Options.GlitchRoleBlockCooldown.GetFloat() + Options.GlobalRoleBlockDuration.GetFloat();
+                    else
+                        KillCooldown = Options.GlitchKillCooldown.GetFloat();
+                    break;
+                case CustomRoles.YingYanger:
+                    if (Main.DoingYingYang)
+                        KillCooldown = Options.YinYangCooldown.GetFloat();
+                    break;
+                case CustomRoles.SerialKiller:
+                    SerialKiller.ApplyKillCooldown(player.PlayerId);
+                    break;
+                case CustomRoles.TimeThief:
+                    TimeThief.SetKillCooldown(player.PlayerId);
+                    break;
+                case CustomRoles.Mare:
+                    Mare.SetKillCooldown(player.PlayerId);
+                    break;
+                case CustomRoles.Arsonist:
+                    KillCooldown = Options.ArsonistCooldown.GetFloat(); //アーソニストはアーソニストのキルクールに。
+                    break;
+                case CustomRoles.Werewolf:
+                    KillCooldown = Options.WWkillCD.GetFloat(); //アーソニストはアーソニストのキルクールに。
+                    break;
+                case CustomRoles.Egoist:
+                    Egoist.ApplyKillCooldown(player.PlayerId);
+                    break;
+                case CustomRoles.Silencer:
+                    if (Main.SilencedPlayer.Count <= 0)
+                    {
+                        KillCooldown = Options.SilenceCooldown.GetFloat();
+                    }
+                    else
+                    {
+                        KillCooldown = Options.DefaultKillCooldown;
+                    }
+                    break;
+                case CustomRoles.Sidekick:
+                case CustomRoles.Jackal:
+                    KillCooldown = Options.JackalKillCooldown.GetFloat();
+                    break;
+                case CustomRoles.CorruptedSheriff:
+                case CustomRoles.Sheriff:
+                    Sheriff.SetKillCooldown(player.PlayerId); //シェリフはシェリフのキルクールに。
+                    break;
+                case CustomRoles.Investigator:
+                    Investigator.SetKillCooldown(player.PlayerId); //シェリフはシェリフのキルクールに。
+                    break;
+                case CustomRoles.Pestilence:
+                    KillCooldown = Options.PestilKillCooldown.GetFloat();
+                    break;
+                case CustomRoles.BloodKnight:
+                    KillCooldown = Options.BKkillCd.GetFloat();
+                    break;
+                case CustomRoles.PlagueBearer:
+                    KillCooldown = Options.InfectCooldown.GetFloat();
+                    break;
+                case CustomRoles.CovenWitch:
+                    KillCooldown = Options.CovenKillCooldown.GetFloat();
+                    break;
+                case CustomRoles.Medusa:
+                    KillCooldown = Options.CovenKillCooldown.GetFloat();
+                    break;
+                case CustomRoles.HexMaster:
+                    if (player.IsHexMode())
+                        KillCooldown = Options.HexCD.GetFloat();
+                    else
+                        KillCooldown = Options.CovenKillCooldown.GetFloat();
+                    break;
+                case CustomRoles.Janitor:
+                case CustomRoles.Painter:
+                    KillCooldown = Options.STCD.GetFloat() * 2;
+                    break;
+
+
+            }
+            if (player.IsLastImpostor())
+                KillCooldown = Options.LastImpostorKillCooldown.GetFloat();
             if (Main.KilledDiseased.Contains(player.PlayerId))
-                Main.AllPlayerKillCooldown[player.PlayerId] *= Options.DiseasedMultiplier.GetFloat();
+                KillCooldown *= Options.DiseasedMultiplier.GetFloat();
+            return KillCooldown;
         }
         public static void TrapperKilled(this PlayerControl killer, PlayerControl target)
         {
@@ -1177,7 +1314,6 @@ namespace TownOfHost
                                 killer.RpcMurderPlayer(killer);
                             killer.RpcMurderPlayer(killer);
                             PlayerState.SetDeathReason(killer.PlayerId, PlayerState.DeathReason.Suicide);
-                            Main.whoKilledWho.Add(killer, killer);
                             PlayerState.SetDead(killer.PlayerId);
                         }
                     }
@@ -1339,10 +1475,14 @@ namespace TownOfHost
                     DestroyableSingleton<HudManager>.Instance.ImpostorVentButton.ToggleVisible(Options.STIgnoreVent.GetBool() && !player.Data.IsDead);
                     player.Data.Role.CanVent = Options.STIgnoreVent.GetBool();
                     break;
+
                 case CustomRoles.NeutPoisoner:
-                    player.Data.Role.CanVent = false;
-                   // player.Data.Role.CanUseKillButton = true;
+                    player.Data.Role.CanVent = true;
+                    bool pois_canUse = true;
+                    DestroyableSingleton<HudManager>.Instance.ImpostorVentButton.ToggleVisible(pois_canUse && !player.Data.IsDead);
+                    // player.Data.Role.CanUseKillButton = true;
                     break;
+
             }
         }
         public static bool IsDouseDone(this PlayerControl player)
@@ -1426,6 +1566,7 @@ namespace TownOfHost
                 player.GetCustomRole() is
                 CustomRoles.Egoist or
                 CustomRoles.Jackal or
+                CustomRoles.NeutWitch or
                 CustomRoles.Sidekick or
                 CustomRoles.PlagueBearer or
                 CustomRoles.Juggernaut or
@@ -1438,6 +1579,7 @@ namespace TownOfHost
                 CustomRoles.TheGlitch or
                 CustomRoles.Werewolf or
                 CustomRoles.NeutPoisoner;
+
         }
 
         public static bool IsDesyncRole(this PlayerControl player)
@@ -1464,6 +1606,7 @@ namespace TownOfHost
                 CustomRoles.TheGlitch or
                 CustomRoles.Werewolf or
                 CustomRoles.NeutPoisoner;
+
         }
         //汎用
         public static bool Is(this PlayerControl target, CustomRoles role) =>

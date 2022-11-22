@@ -10,7 +10,7 @@ namespace TownOfHost
 
         public static void SetupCustomOption()
         {
-            Options.SetupRoleOptions(Id, CustomRoles.Ninja);
+            Options.SetupRoleOptions(Id, CustomRoles.Ninja, AmongUsExtensions.OptionType.Impostor);
         }
         public static void Init()
         {
@@ -32,7 +32,7 @@ namespace TownOfHost
         {
             if (Main.CheckShapeshift[killer.PlayerId])
             {
-                Main.AllPlayerKillCooldown[killer.PlayerId] = Options.DefaultKillCooldown * 2;
+                Main.AllPlayerKillCooldown[killer.PlayerId] = Options.DefaultKillCooldown;
                 killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
                 killer.RpcGuardAndKill(target);
                 NinjaKillTarget.Add(target);

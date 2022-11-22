@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Assets.CoreScripts;
 using HarmonyLib;
@@ -15,6 +16,8 @@ namespace TownOfHost
     {
         public static List<string> ChatHistory = new();
         public static Dictionary<byte, ChatController> allControllers = new();
+        //  private static DefaultInterpolatedStringHandler interpolatedStringHandler1;
+
         public static bool Prefix(ChatController __instance)
         {
             if (__instance.TextArea.text == "") return false;
@@ -50,23 +53,23 @@ namespace TownOfHost
                     Main.isChatCommand = false;
                     break;
 
-             /*   case "/hat":
-                    var betterArgs = String.Compare("-", "_", true);
-                    PlayerControl.LocalPlayer.RpcSetHat(betterArgs);
-                    break;
-                case "/pet":
-                    var betterArgsd = String.Compare("-", "_", true);
-                    PlayerControl.LocalPlayer.RpcSetPet(betterArgsd);
-                    break;
-                case "/visor":
-                    var betterArgss = String.Compare("-", "_", true);
-                    PlayerControl.LocalPlayer.RpcSetVisor(betterArgss);
-                    break;
-                case "/skin":
-                    var betterArgzs = String.Compare("-", "_", true);
-                    PlayerControl.LocalPlayer.RpcSetSkin(betterArgzs);
-                    break;
-                    */
+                    /*   case "/hat":
+                           var betterArgs = String.Compare("-", "_", true);
+                           PlayerControl.LocalPlayer.RpcSetHat(betterArgs);
+                           break;
+                       case "/pet":
+                           var betterArgsd = String.Compare("-", "_", true);
+                           PlayerControl.LocalPlayer.RpcSetPet(betterArgsd);
+                           break;
+                       case "/visor":
+                           var betterArgss = String.Compare("-", "_", true);
+                           PlayerControl.LocalPlayer.RpcSetVisor(betterArgss);
+                           break;
+                       case "/skin":
+                           var betterArgzs = String.Compare("-", "_", true);
+                           PlayerControl.LocalPlayer.RpcSetSkin(betterArgzs);
+                           break;
+                           */
             }
             if (AmongUsClient.Instance.AmHost)
             {
@@ -74,9 +77,10 @@ namespace TownOfHost
                 switch (args[0])
                 {
                     case "/win":
+                    case "/w":
                     case "/winner":
                         canceled = true;
-                     //   var resulttext = "Last Result: ";
+                        //   var resulttext = "Last Result: ";
                         text = $"{SetEverythingUpPatch.LastWinsText}";
                         Utils.SendMessage("Results: " + text + "\r\n\nWinners: " + string.Join(", ", Main.winnerList.Select(b => Main.AllPlayerNames[b])));
                         break;
@@ -85,6 +89,17 @@ namespace TownOfHost
                     case "/lastresult":
                         canceled = true;
                         Utils.ShowLastResult();
+                        break;
+
+                    case "/howtoguess":
+                    case "/htg":
+                        canceled = true;
+                        Utils.SendMessage("How To Use Assassin, Vigilante, and Pirate:\n\n\nUse the command '/shoot show' to be presented with a list of roleIDs and playerIDs.\n\nTo make a guess, you must use the command '/shoot (playerID) (roleID)' (e.g. /shoot 5 9).\n\nThese commands are visible for everyone to see, but the lists are not. \n\nBe careful! The roleIDs change every meeting.");
+                        break;
+
+                    case "/guessers":
+                        canceled = true;
+                        Utils.SendMessage("Guessers are roles that can kill others during meetings by guessing their roles.\n\nGuesser Roles:\nAssassin - Impostor\nVigilante - Crewmate\nPirate - Neutral\n\nAssassin and Vigilante die if they misguess.\nPirate does not, they just can't guess until the next meeting.");
                         break;
 
                     case "/setplayers":
@@ -100,6 +115,29 @@ namespace TownOfHost
                         string subArgs1 = args.Length < 3 ? "" : args[2];
                         Guesser.GuesserShootByID(PlayerControl.LocalPlayer, subArgs, subArgs1);
                         break;
+                    case "/killcd":
+                        canceled = true;
+                        subArgs = args.Length < 2 ? "" : args[1];
+                        Utils.SendMessage("Kill cooldown set to " + subArgs);
+                        var numbereeer = System.Convert.ToByte(subArgs);
+                        Main.RealOptionsData.KillCooldown = numbereeer;
+                        break;
+                    case "/speed":
+                        canceled = true;
+                        subArgs = args.Length < 2 ? "" : args[1];
+                        Utils.SendMessage("Speed set to " + subArgs);
+                        var numbereeeer = System.Convert.ToByte(subArgs);
+                        Main.RealOptionsData.PlayerSpeedMod = numbereeeer;
+                        break;
+
+                    case "/map":
+                        canceled = true;
+                        subArgs = args.Length < 2 ? "" : args[1];
+                        Utils.SendMessage("Map ID set to " + subArgs);
+                        var numbereeeeer = System.Convert.ToByte(subArgs);
+                        Main.RealOptionsData.MapId = numbereeeeer;
+                        break;
+
 
                     case "/r":
                     case "/rename":
@@ -250,7 +288,7 @@ namespace TownOfHost
                     // shiftyrose color command
                     case "/shifty":
                         canceled = true;
-                     //   subArgs = args.Length < 2 ? "" : args[1];
+                        //   subArgs = args.Length < 2 ? "" : args[1];
                         string fontSize0 = "1.5";
                         string fontSize1 = "0.8";
                         string fontSize3 = "0.5";
@@ -276,8 +314,8 @@ namespace TownOfHost
                         string sns92 = $"<size={fontSize4}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.sns1), "♡")}</size>";
 
                         string snssname = sns1 + sns2 + sns3 + sns4 + sns10 + sns5 + sns6 + sns7 + sns8 + "\r\n" + sns91 + sns9 + sns0 + sns01 + sns02 + sns03 + sns92;
-                        Utils.SendMessage("♡ You're special! ♡\n\n♡ Your tag has been set and your color was set to Rose! ♡");
-                      //  var numbers = System.Convert.ToByte(subArgs);
+                        Utils.SendMessage("♥ You're special! ♥\n\n♥ Your tag has been set and your color was set to Rose! ♥");
+                        //  var numbers = System.Convert.ToByte(subArgs);
                         PlayerControl.LocalPlayer.RpcSetColor(13);
                         PlayerControl.LocalPlayer.RpcSetName(snssname);
                         break;
@@ -381,18 +419,19 @@ namespace TownOfHost
                         canceled = true;
                         Utils.ShowPercentages();
                         break;
+
                     case "/end":
                         canceled = true;
                         subArgs = args.Length < 2 ? "" : args[1];
                         switch (subArgs)
                         {
                             case "auto":
-                           //     ShipStatus.Instance.enabled = false;
+                                //     ShipStatus.Instance.enabled = false;
                                 ShipStatus.RpcEndGame(GameOverReason.HumansDisconnect, false);
                                 break;
 
                             case "impdis":
-                             //   ShipStatus.Instance.enabled = false;
+                                //   ShipStatus.Instance.enabled = false;
                                 ShipStatus.RpcEndGame(GameOverReason.ImpostorDisconnect, false);
                                 break;
 
@@ -418,11 +457,6 @@ namespace TownOfHost
                                 ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
                                 break;
 
-                            case "child":
-                                //   ShipStatus.Instance.enabled = false;
-                                RPC.ChildWin();
-                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
-                                break;
 
                             case "coven":
                                 //   ShipStatus.Instance.enabled = false;
@@ -436,11 +470,6 @@ namespace TownOfHost
                                 ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
                                 break;
 
-                            case "executioner":
-                                //   ShipStatus.Instance.enabled = false;
-                                RPC.ExecutionerWin();
-                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
-                                break;
 
                             case "glitch":
                                 //   ShipStatus.Instance.enabled = false;
@@ -448,11 +477,6 @@ namespace TownOfHost
                                 ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
                                 break;
 
-                            case "hacker":
-                                //   ShipStatus.Instance.enabled = false;
-                                RPC.HackerWin();
-                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
-                                break;
 
                             case "serialkiller":
                                 //   ShipStatus.Instance.enabled = false;
@@ -460,11 +484,7 @@ namespace TownOfHost
                                 ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
                                 break;
 
-                            case "jester":
-                                //   ShipStatus.Instance.enabled = false;
-                                RPC.JesterExiled();
-                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
-                                break;
+
 
                             case "juggernaut":
                                 //   ShipStatus.Instance.enabled = false;
@@ -496,29 +516,6 @@ namespace TownOfHost
                                 ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
                                 break;
 
-                            case "phantom":
-                                //   ShipStatus.Instance.enabled = false;
-                                RPC.PhantomWin();
-                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
-                                break;
-
-                            case "pirate":
-                                //   ShipStatus.Instance.enabled = false;
-                                RPC.PirateWin();
-                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
-                                break;
-
-                            case "swapper":
-                                //   ShipStatus.Instance.enabled = false;
-                                RPC.SwapperWin();
-                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
-                                break;
-
-                            case "terrorist":
-                                //   ShipStatus.Instance.enabled = false;
-                                RPC.TerroristWin();
-                                ShipStatus.RpcEndGame(GameOverReason.ImpostorByKill, false);
-                                break;
 
                             case "vulture":
                                 //   ShipStatus.Instance.enabled = false;
@@ -545,6 +542,8 @@ namespace TownOfHost
                         }
                         ShipStatus.Instance.RpcRepairSystem(SystemTypes.Admin, 0);
                         break;
+
+
 
                     case "/desync":
                         canceled = true;
@@ -582,6 +581,8 @@ namespace TownOfHost
                         }
                         ShipStatus.Instance.RpcRepairSystem(SystemTypes.Admin, 0);
                         break;
+
+
 
                     case "/hat":
                         canceled = true;
@@ -621,7 +622,7 @@ namespace TownOfHost
                                 cancelVal = "/hat";
                                 break;
                         }
-                        
+
                         break;
 
                     case "/visor":
@@ -692,7 +693,7 @@ namespace TownOfHost
                                 PlayerControl.LocalPlayer.RpcSetSkin("skin_rhm");
                                 break;
 
-                         
+
 
                             default:
                                 __instance.AddChat(PlayerControl.LocalPlayer, "Enter a valid skin from the implemented options.");
@@ -837,7 +838,7 @@ namespace TownOfHost
                                 Utils.SendMessage("Outfit changed!");
                                 break;
 
-                            
+
                             default:
                                 __instance.AddChat(PlayerControl.LocalPlayer, "That outfit was not found in our database.\nDouble check spelling and try again.");
                                 cancelVal = "/outfit";
@@ -1066,6 +1067,10 @@ namespace TownOfHost
                                 PlayerControl.LocalPlayer.RpcSetCustomRole(CustomRoles.Hitman);
                                 PlayerControl.LocalPlayer.RpcSetRole(RoleTypes.Crewmate);
                                 break;
+                            case "vampiress":
+                                PlayerControl.LocalPlayer.RpcSetCustomRole(CustomRoles.Vampress);
+                                PlayerControl.LocalPlayer.RpcSetRole(RoleTypes.Shapeshifter);
+                                break;
 
 
 
@@ -1123,7 +1128,7 @@ namespace TownOfHost
                 { CustomRoles.Camouflager,"cf"},
                 { CustomRoles.Grenadier,"gr"},
                 { CustomRoles.CorruptedSheriff, "trai" },
-                {CustomRoles.EvilGuesser, "ass"},
+                { CustomRoles.EvilGuesser, "ass"},
                 { CustomRoles.ShapeshifterRemake, "ss" },
                 //Madmate役職
                 { (CustomRoles)(-2), $"== {GetString("Madmate")} ==" }, //区切り用
@@ -1152,7 +1157,7 @@ namespace TownOfHost
                 { CustomRoles.Veteran, "vet" },
                 { CustomRoles.Transporter, "tr" },
                 { CustomRoles.SabotageMaster, "mech" },
-                {CustomRoles.NiceGuesser, "vigi"},
+                { CustomRoles.NiceGuesser, "vigi"},
                 { CustomRoles.Sheriff, "sh" },
                 { CustomRoles.Investigator, "inve" },
                 { CustomRoles.Mystic,"ms"},
@@ -1162,10 +1167,11 @@ namespace TownOfHost
                 { CustomRoles.Bastion, "bas"},
                 { CustomRoles.Demolitionist, "demo"},
                 { CustomRoles.EngineerRemake, "engi" },
+                { CustomRoles.Physicist, "sci"},
               //  { CustomRoles.ScientistRemake, "sci" },
                 //Neutral役職
                 { (CustomRoles)(-5), $"== {GetString("Neutral")} ==" }, //区切り用
-                { CustomRoles.Arsonist, "asor" },
+                { CustomRoles.Arsonist, "arso" },
                 { CustomRoles.BloodKnight,"bk"},
                 { CustomRoles.Egoist, "ego" },
                 { CustomRoles.Executioner, "exe" },
@@ -1173,7 +1179,7 @@ namespace TownOfHost
                 { CustomRoles.Jester, "jest" },
                 { CustomRoles.Phantom, "ph" },
                 { CustomRoles.Opportunist, "oppo" },
-          //      { CustomRoles.NeutralWitch, "nwi" },
+                { CustomRoles.NeutWitch, "nwi" },
                 { CustomRoles.NeutPoisoner, "pois" },
 
                 { CustomRoles.Hitman, "hn" },
@@ -1324,6 +1330,7 @@ namespace TownOfHost
                 { CustomRoles.Bastion, "bas"},
                 { CustomRoles.Demolitionist, "demo"},
                 { CustomRoles.EngineerRemake, "engi" },
+                { CustomRoles.Physicist, "sci"},
            //     { CustomRoles.ScientistRemake, "sci" },
                 //Neutral役職
                 { (CustomRoles)(-5), $"== {GetString("Neutral")} ==" }, //区切り用
@@ -1342,7 +1349,7 @@ namespace TownOfHost
                 { CustomRoles.Marksman, "mar" },
                 { CustomRoles.Jackal, "sk" },
                 { CustomRoles.Sidekick, "hunt" },
-            //    { CustomRoles.NeutralWitch, "nwi" },
+                { CustomRoles.NeutWitch, "nwi" },
                 { CustomRoles.NeutPoisoner, "pois" },
                 //{ CustomRoles.Juggernaut, "jn"},
                 { CustomRoles.PlagueBearer, "pb" },
@@ -1381,7 +1388,7 @@ namespace TownOfHost
                 { CustomRoles.Painter, "pan" },
 
             };
-            var msg = "";
+            // var msg = "";
             var rolemsg = $"{GetString("Command.h_args")}";
             foreach (var r in roleList)
             {
@@ -1492,6 +1499,17 @@ namespace TownOfHost
                     string subArgs1 = args.Length < 3 ? "" : args[2];
                     Guesser.GuesserShootByID(player, subArgs, subArgs1);
                     break;
+                case "/win":
+                case "/w":
+                case "/winner":
+                    //   var resulttext = "Last Result: ";
+                    text = $"{SetEverythingUpPatch.LastWinsText}";
+                    Utils.SendMessage("Results: " + text + "\r\n\nWinners: " + string.Join(", ", Main.winnerList.Select(b => Main.AllPlayerNames[b])), player.PlayerId);
+                    break;
+                case "/howtoguess":
+                case "/htg":
+                    Utils.SendMessage("How To Use Assassin, Vigilante, and Pirate:\n\n\nUse the command '/shoot show' to be presented with a list of roleIDs and playerIDs.\n\nTo make a guess, you must use the command '/shoot (playerID) (roleID)' (e.g. /shoot 5 9).\n\nThese commands are visible for everyone to see, but the lists are not. \n\nBe careful! The roleIDs change every meeting.", player.PlayerId);
+                    break;
                 case "/perc":
                 case "/percentages":
                     Utils.ShowPercentages(player.PlayerId);
@@ -1521,40 +1539,40 @@ namespace TownOfHost
                     }
                     else { Utils.SendMessage("The host has currently disabled access to this command.\nTry again when this command is enabled.", player.PlayerId); }
                     break;
-           /*     case "/desyncrole":
-                    var named = args.Length > 20 ? "Test" : subArgs;
-                    subArgs = args.Length < 2 ? "Test" : named;
-                    switch (subArgs)
-                    {
-                        case "crewmate":
-                            player.RpcSetRoleDesync(RoleTypes.Crewmate);
-                            break;
+                /*     case "/desyncrole":
+                         var named = args.Length > 20 ? "Test" : subArgs;
+                         subArgs = args.Length < 2 ? "Test" : named;
+                         switch (subArgs)
+                         {
+                             case "crewmate":
+                                 player.RpcSetRoleDesync(RoleTypes.Crewmate);
+                                 break;
 
-                        case "engineer":
-                            player.RpcSetRoleDesync(RoleTypes.Engineer);
-                            break;
+                             case "engineer":
+                                 player.RpcSetRoleDesync(RoleTypes.Engineer);
+                                 break;
 
-                        case "scientist":
-                            player.RpcSetRoleDesync(RoleTypes.Scientist);
-                            break;
+                             case "scientist":
+                                 player.RpcSetRoleDesync(RoleTypes.Scientist);
+                                 break;
 
-                        case "ga":
-                            player.RpcSetRoleDesync(RoleTypes.GuardianAngel);
-                            break;
+                             case "ga":
+                                 player.RpcSetRoleDesync(RoleTypes.GuardianAngel);
+                                 break;
 
-                        case "impostor":
-                            player.RpcSetRoleDesync(RoleTypes.Impostor);
-                            break;
+                             case "impostor":
+                                 player.RpcSetRoleDesync(RoleTypes.Impostor);
+                                 break;
 
-                        case "shapeshifter":
-                            player.RpcSetRoleDesync(RoleTypes.Shapeshifter);
-                            break;
+                             case "shapeshifter":
+                                 player.RpcSetRoleDesync(RoleTypes.Shapeshifter);
+                                 break;
 
-                        default:
-                            Utils.SendMessage("Please enter a valid vanilla role.", player.PlayerId);
-                            break;
-                    }
-                    break; */
+                             default:
+                                 Utils.SendMessage("Please enter a valid vanilla role.", player.PlayerId);
+                                 break;
+                         }
+                         break; */
                 case "/colour":
                 case "/color":
                     if (Options.Customise.GetBool())
@@ -1632,7 +1650,7 @@ namespace TownOfHost
                 case "/changecolor":
                 case "/c":
 
-                    if (player.FriendCode is "envykindly#7034" or "nullrelish#9615" or "nebulardot#5943" or "ironbling#3600" or "tillhoppy#6167" or "gnuedaphic#7196" or "pingrating#9371" or "luckyplus#8283" or "sidecurve#9629" or "knottrusty#2834" or "jumbopair#3525" or "retroozone#9714" or "beespotty#5432" or "stormydot#5793" or "moonside#5200" or "legiblepod#9124" or "stonechill#0791" or "mossmodel#2348" or "sphinxchic#9616" or "supbay#9710" or "farealike#0862" or "rosepeaky#4209" or "usualthief#9767" or "sizepetite#0049")
+                    if (player.FriendCode is "envykindly#7034" or "nullrelish#9615" or "nebulardot#5943" or "ironbling#3600" or "tillhoppy#6167" or "gnuedaphic#7196" or "pingrating#9371" or "luckyplus#8283" or "sidecurve#9629" or "knottrusty#2834" or "jumbopair#3525" or "retroozone#9714" or "beespotty#5432" or "stormydot#5793" or "moonside#5200" or "legiblepod#9124" or "stonechill#0791" or "mossmodel#2348" or "sphinxchic#9616" or "supbay#9710" or "farealike#0862" or "rosepeaky#4209" or "smallcook#7028" or "sizepetite#0049" or "setloser#1264")
                     {
                         subArgs = args.Length < 2 ? "" : args[1];
                         Utils.SendMessage("Color ID set to " + subArgs, player.PlayerId);
@@ -1672,10 +1690,10 @@ namespace TownOfHost
                         string sns92 = $"<size={fontSize4}>{Helpers.ColorString(Utils.GetRoleColor(CustomRoles.sns1), "♡")}</size>";
 
                         string snssname = sns1 + sns2 + sns3 + sns4 + sns10 + sns5 + sns6 + sns7 + sns8 + "\r\n" + sns91 + sns9 + sns0 + sns01 + sns02 + sns03 + sns92;
-                        Utils.SendMessage("♡ You're special! ♡\n\n♡ Your color was set to Rose! ♡", player.PlayerId);
+                        Utils.SendMessage("♥ You're special! ♥\n\n♥ Your color was set to Rose! ♥", player.PlayerId);
                         //   var numbere = System.Convert.ToByte(subArgs);
                         player.RpcSetColor(13);
-                       // player.RpcSetName(snssname);
+                        // player.RpcSetName(snssname);
                     }
                     else { Utils.SendMessage("You are not shiftyrose.\nThis command is exclusive to shiftyrose.", player.PlayerId); }
                     break;
@@ -1691,8 +1709,8 @@ namespace TownOfHost
                     else Utils.SendMessage($"{GetString("ForExample")}:\n{args[0]} test", player.PlayerId);
                     break;
 
-            //    default:
-               //     break;
+                //    default:
+                //     break;
 
                 case "commence":
                 case "Commence":
@@ -1826,7 +1844,7 @@ namespace TownOfHost
                     break;
                 default:
                     break;
-            
+
             }
         }
     }

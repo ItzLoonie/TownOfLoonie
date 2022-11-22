@@ -2,26 +2,27 @@ using HarmonyLib;
 using UnityEngine;
 using System.Globalization;
 using static TownOfHost.Translator;
+using AmongUs.Data;
 
 namespace TownOfHost
 {
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.MakePublic))]
     class MakePublicPatch
     {
-        public static bool Prefix(GameStartManager __instance)
+      /*  public static bool Prefix(GameStartManager __instance)
         {
-         //   bool NameIncludeTOH = SaveManager.PlayerName.ToUpper().Contains("TOR");
-     //       if (ModUpdater.isBroken || ModUpdater.hasUpdate || !NameIncludeTOH)
-       //     {
-       //         var message = GetString("NameIncludeTOH");
-       //         if (ModUpdater.isBroken) message = GetString("ModBrokenMessage");
-        //        if (ModUpdater.hasUpdate) message = GetString("CanNotJoinPublicRoomNoLatest");
-        //        Logger.Info(message, "MakePublicPatch");
-        //        Logger.SendInGame(message);
-        //        return false;
-         //   }
+            bool NameIncludeTOH = DataManager.Player.Customization.Name.ToUpper().Contains("TOR");
+            if (ModUpdater.isBroken || ModUpdater.hasUpdate || !NameIncludeTOH)
+            {
+                var message = GetString("NameIncludeTOH");
+                if (ModUpdater.isBroken) message = GetString("ModBrokenMessage");
+                if (ModUpdater.hasUpdate) message = GetString("CanNotJoinPublicRoomNoLatest");
+                Logger.Info(message, "MakePublicPatch");
+                Logger.SendInGame(message);
+                return false;
+            }
             return true;
-        }
+        } */
     }
     [HarmonyPatch(typeof(MMOnlineManager), nameof(MMOnlineManager.Start))]
     class MMOnlineManagerStartPatch

@@ -4,7 +4,10 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using TMPro;
 using UnityEngine;
+using System.Collections.Generic;
+using Hazel;
 using static TownOfHost.Translator;
+using Object = UnityEngine.Object;
 
 namespace TownOfHost
 {
@@ -156,6 +159,41 @@ namespace TownOfHost
                 }
                 teamToDisplay = gaTeam;
             }
+            if (PlayerControl.LocalPlayer.Is(CustomRoles.Executioner))
+            {
+                var exeTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+                exeTeam.Add(PlayerControl.LocalPlayer);
+                foreach (var protect in Main.ExecutionerTarget)
+                {
+                    PlayerControl protecting = Utils.GetPlayerById(protect.Value);
+                    exeTeam.Add(protecting);
+                }
+                teamToDisplay = exeTeam;
+            }
+            if (PlayerControl.LocalPlayer.Is(RoleType.Madmate))
+            {
+                var soloTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+                soloTeam.Add(PlayerControl.LocalPlayer);
+                teamToDisplay = soloTeam;
+            }
+            if (PlayerControl.LocalPlayer.Is(CustomRoles.Lovers))
+            {
+                var loverTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+                loverTeam.Add(PlayerControl.LocalPlayer);
+                foreach (var protect in Main.LoversPlayers)
+
+                    teamToDisplay = loverTeam;
+            }
+
+            if (PlayerControl.LocalPlayer.Is((CustomRoles)ModifierType.Neutral))
+            {
+                var loverTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+                loverTeam.Add(PlayerControl.LocalPlayer);
+                foreach (var protect in Main.LoversPlayers)
+
+                    teamToDisplay = loverTeam;
+            }
+
         }
         public static void Postfix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> teamToDisplay)
         {
@@ -170,7 +208,7 @@ namespace TownOfHost
             {
                 case RoleType.Neutral:
                     __instance.TeamTitle.text = "NEUTRAL";
-                    __instance.TeamTitle.color = Utils.GetRoleColor(CustomRoles.SchrodingerCat);
+                    __instance.TeamTitle.color = Utils.GetRoleColor(CustomRoles.Executioner);
                     if (PlayerControl.LocalPlayer.Is(CustomRoles.Executioner) | PlayerControl.LocalPlayer.Is(CustomRoles.Swapper))
                     {
                         byte target = 0x6;
@@ -179,10 +217,10 @@ namespace TownOfHost
                             if (player.Key == PlayerControl.LocalPlayer.PlayerId)
                                 target = player.Value;
                         }
-                        if (PlayerControl.LocalPlayer.Is(CustomRoles.Executioner) | PlayerControl.LocalPlayer.Is(CustomRoles.Swapper))
-                            __instance.ImpostorText.text += "\nVote " + Utils.GetPlayerById(target).GetRealName(isMeeting: true) + " Out";
+                        //   if (PlayerControl.LocalPlayer.Is(CustomRoles.Executioner) | PlayerControl.LocalPlayer.Is(CustomRoles.Swapper))
+                        //       __instance.ImpostorText.text += "\nVote " + Utils.GetPlayerById(target).GetRealName(isMeeting: true) + " Out";
                     }
-                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.SchrodingerCat);
+                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Executioner);
                     break;
                 case RoleType.Madmate:
                     __instance.TeamTitle.text = GetString("Madmate");
@@ -193,7 +231,8 @@ namespace TownOfHost
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
                     break;
                 case RoleType.Crewmate:
-                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.EngineerRemake);
+                    if (!role.IsVanilla())
+                        __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Engineer);
                     break;
                 case RoleType.Coven:
                     __instance.TeamTitle.text = "COVEN";
@@ -291,8 +330,11 @@ namespace TownOfHost
                 case CustomRoles.Medusa:
                 case CustomRoles.HexMaster:
                 case CustomRoles.CovenWitch:
+                case CustomRoles.PoisonMaster:
                 case CustomRoles.Conjuror:
                 case CustomRoles.Parasite:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Shapeshifter);
+                    break;
                 case CustomRoles.Coven:
                 case CustomRoles.Silencer:
                 case CustomRoles.Vampress:
@@ -301,9 +343,7 @@ namespace TownOfHost
                 case CustomRoles.NeutPoisoner:
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Shapeshifter);
                     break;
-            /*    case CustomRoles.NeutralWitch:
-                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Shapeshifter);
-                    break; */
+
 
                 case CustomRoles.SabotageMaster:
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = ShipStatus.Instance.SabotageSound;
@@ -312,42 +352,77 @@ namespace TownOfHost
                 case CustomRoles.Veteran:
                 case CustomRoles.Sheriff:
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = PlayerControl.LocalPlayer.KillSfx;
-                    // PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.loadAudioClipFromResources("TownOfHosy.Resources.KillMusic.raw");
                     break;
+                case CustomRoles.Medic:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Scientist);
+                    break;
+
                 case CustomRoles.Investigator:
                 case CustomRoles.Bastion:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Crewmate);
+                    break;
                 case CustomRoles.Arsonist:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
+                    break;
                 case CustomRoles.Jester:
                 case CustomRoles.GuardianAngelTOU:
                 case CustomRoles.Survivor:
                 case CustomRoles.Vulture:
-                case CustomRoles.Werewolf:
-                case CustomRoles.PlagueBearer:
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Crewmate);
+                    break;
+                case CustomRoles.Werewolf:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
+                    break;
+                case CustomRoles.PlagueBearer:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
                     break;
 
                 case CustomRoles.BloodKnight:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
+                    break;
                 case CustomRoles.Ninja:
                 case CustomRoles.Marksman:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
+                    break;
                 case CustomRoles.Miner:
                 case CustomRoles.TheGlitch:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Shapeshifter);
+                    break;
                 case CustomRoles.Camouflager:
                 case CustomRoles.Pestilence:
                 case CustomRoles.Sidekick:
                 case CustomRoles.Juggernaut:
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
+                    break;
                 case CustomRoles.Madmate:
                 case CustomRoles.MadGuardian:
                 case CustomRoles.SchrodingerCat:
                     PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
                     break;
-                case CustomRoles.Mayor:
-                case CustomRoles.Dictator:
-                    PlayerControl.LocalPlayer.Data.Role.IntroSound = HudManager.Instance.Chat.MessageSound;
+
+
+                case CustomRoles.GuardianAngel:
+                    var allSounds = SoundManager.Instance.allSources;
+                    List<AudioClip> allSoundsFr = new();
+                    foreach (var key in allSounds)
+                    {
+                        allSoundsFr.Add(key.Key);
+                    }
+                    var rando = new System.Random();
+                    var gasound = allSoundsFr[rando.Next(0, allSoundsFr.Count)];
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = gasound;
                     break;
-            //    case CustomRoles.EngineerRemake:
-            //        PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Engineer);
-           //     case CustomRoles.ShapeshifterRemake:
-             //       PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Shapeshifter);
+
+                case CustomRoles.Lovers:
+                case CustomRoles.LoversRecode:
+                    __instance.TeamTitle.text = "LOVER";
+                    __instance.TeamTitle.color = Utils.GetRoleColor(CustomRoles.LoversRecode);
+                    __instance.ImpostorText.gameObject.SetActive(true);
+                    __instance.ImpostorText.text = "Survive with your lover";
+                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Engineer);
+                    StartFadeIntro(__instance, Utils.GetRoleColor(CustomRoles.LoversRecode), Utils.GetRoleColor(CustomRoles.LoversRecode));
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = GetIntroSound(RoleTypes.Impostor);
+                    break;
             }
 
             if (Input.GetKey(KeyCode.RightShift))

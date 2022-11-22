@@ -55,12 +55,17 @@ namespace TownOfHost
         SetTransportNumber,
         RpcMurderPlayer,
         AssassinKill,
-        SetTraitor
+        SetTraitor,
+        RpcAddOracleTarget,
+        RpcClearOracleTargets,
+        SetNumOfWitchesRemaining,
+        RpcSetCleanerClean
     }
     public enum Sounds
     {
         KillSound,
-        TaskComplete
+        TaskComplete,
+        Sabotage
     }
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
     class RPCHandlerPatch
@@ -89,13 +94,13 @@ namespace TownOfHost
             if (__instance.PlayerId != 0 && Enum.IsDefined(typeof(CustomRPC), (int)callId) && callId != (byte)CustomRPC.VersionCheck && callId != (byte)CustomRPC.RpcMurderPlayer)
             {
                 Logger.Warn($"{__instance?.Data?.PlayerName}:{callId}({RPC.GetRpcName(callId)}) Canceled because it was sent from someone other than the host.", "CustomRPC");
-               /* if (AmongUsClient.Instance.AmHost)
+                if (AmongUsClient.Instance.AmHost)
                 {
                     AmongUsClient.Instance.KickPlayer(__instance.GetClientId(), false);
                     Logger.Warn($"不正なRPCを受信したため{__instance?.Data?.PlayerName}をキックしました。", "Kick");
                     Logger.SendInGame(string.Format(GetString("Warning.InvalidRpc"), __instance?.Data?.PlayerName));
                     Logger.SendInGame($"Invalid RPC Sent: {RPC.GetRpcName(callId)}");
-                } */
+                }
                 return false;
             }
             return true;
@@ -318,6 +323,20 @@ namespace TownOfHost
                         RoleManager.Instance.SetRole(localPlayer, RoleTypes.Impostor);
                     }
                     break;
+                case CustomRPC.RpcAddOracleTarget:
+                    Main.rolesRevealedNextMeeting.Add(reader.ReadByte());
+                    break;
+                case CustomRPC.RpcClearOracleTargets:
+                    Main.rolesRevealedNextMeeting.Clear();
+                    break;
+                case CustomRPC.SetNumOfWitchesRemaining:
+                    Main.WitchesThisRound = reader.ReadInt32();
+                    break;
+                case CustomRPC.RpcSetCleanerClean:
+                    var cleaner = reader.ReadByte();
+                    var canClean = reader.ReadBoolean();
+                    Main.CleanerCanClean[cleaner] = canClean;
+                    break;
             }
         }
     }
@@ -473,12 +492,6 @@ namespace TownOfHost
                 Logger.Error($"正常にEndGameを行えませんでした。{ex}", "EndGame");
             }
         }
-
-        private static void NeutPoisWin()
-        {
-            throw new NotImplementedException();
-        }
-
         public static void TrollWin(byte trollID)
         {
             Main.WonTrollID = trollID;
@@ -527,6 +540,11 @@ namespace TownOfHost
             Main.WonHackerID = hackerID;
             Main.currentWinner = CustomWinner.Hacker;
             CustomWinTrigger(hackerID);
+        }
+        public static void PoisonerWin()
+        {
+            Main.currentWinner = CustomWinner.NeutPoisoner;
+            CustomWinTrigger(0);
         }
         public static void FFAwin(byte ffaID)
         {
@@ -608,12 +626,6 @@ namespace TownOfHost
             Main.currentWinner = CustomWinner.Werewolf;
             CustomWinTrigger(0);
         }
-
-        public static void PoisonerWin()
-        {
-            Main.currentWinner = CustomWinner.NeutPoisoner;
-            CustomWinTrigger(0);
-        }
         public static void KnightWin()
         {
             Main.currentWinner = CustomWinner.BloodKnight;
@@ -671,6 +683,9 @@ namespace TownOfHost
                         break;
                     case Sounds.TaskComplete:
                         SoundManager.Instance.PlaySound(DestroyableSingleton<HudManager>.Instance.TaskCompleteSound, false, 0.8f);
+                        break;
+                    case Sounds.Sabotage:
+                        SoundManager.Instance.PlaySound(ShipStatus.Instance.SabotageSound, false, 0.8f);
                         break;
                 }
             }
@@ -855,42 +870,7 @@ namespace TownOfHost
         public static void ResetCurrentInfectingTarget(byte pbId) => SetCurrentInfectingTarget(pbId, 255);
         public static void ResetCurrentDousingTarget(byte arsonistId) => SetCurrentDousingTarget(arsonistId, 255);
 
-        internal static void ChildWin()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void ExecutionerWin()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void HackerWin()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void JesterExiled()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void PhantomWin()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void PirateWin()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void SwapperWin()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void TerroristWin()
+        internal static void RpcAddOracleTarget(byte v)
         {
             throw new NotImplementedException();
         }

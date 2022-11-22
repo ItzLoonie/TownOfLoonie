@@ -104,7 +104,7 @@ namespace TownOfHost
                             break;
                         }
                         Main.WitchedList[target.PlayerId] = necromancer.PlayerId;
-                        Main.AllPlayerKillCooldown[necromancer.PlayerId] = Options.CovenKillCooldown.GetFloat() * 2;
+                        Main.AllPlayerKillCooldown[necromancer.PlayerId] = Options.CovenKillCooldown.GetFloat() * 1;
                         necromancer.CustomSyncSettings();
                         necromancer.RpcGuardAndKill(target);
                         break;
@@ -265,7 +265,7 @@ namespace TownOfHost
                         if (!target.Is(CustomRoles.Bewilder))
                         {
                             Utils.CustomSyncAllSettings();
-                            Main.AllPlayerKillCooldown[necromancer.PlayerId] = Options.DefaultKillCooldown * 2;
+                            Main.AllPlayerKillCooldown[necromancer.PlayerId] = Options.DefaultKillCooldown * 1;
                             necromancer.CustomSyncSettings(); //負荷軽減のため、necromancerだけがCustomSyncSettingsを実行
                             necromancer.RpcGuardAndKill(target);
                             Main.BitPlayers.Add(target.PlayerId, (necromancer.PlayerId, 0f));
@@ -277,7 +277,7 @@ namespace TownOfHost
                         if (Options.VampireBuff.GetBool()) //Vampire Buff will still make Vampire report but later.
                         {
                             Utils.CustomSyncAllSettings();
-                            Main.AllPlayerKillCooldown[necromancer.PlayerId] = Options.DefaultKillCooldown * 2;
+                            Main.AllPlayerKillCooldown[necromancer.PlayerId] = Options.DefaultKillCooldown;
                             necromancer.CustomSyncSettings(); //負荷軽減のため、necromancerだけがCustomSyncSettingsを実行
                             necromancer.RpcGuardAndKill(target);
                             Main.BitPlayers.Add(target.PlayerId, (necromancer.PlayerId, 0f));
@@ -398,7 +398,7 @@ namespace TownOfHost
                         break;
                     }
                     Main.PuppeteerList[target.PlayerId] = necromancer.PlayerId;
-                    Main.AllPlayerKillCooldown[necromancer.PlayerId] = Options.DefaultKillCooldown * 2;
+                    Main.AllPlayerKillCooldown[necromancer.PlayerId] = Options.DefaultKillCooldown * 1;
                     necromancer.CustomSyncSettings(); //負荷軽減のため、necromancerだけがCustomSyncSettingsを実行
                     necromancer.RpcGuardAndKill(target);
                     break;
