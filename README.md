@@ -1,3 +1,5 @@
+# Discontinued due to TOH devs requesting Discussions to keep the TOH TOR source private :(
+
 # Town Of Loonie
 
 ## Regarding this mod
